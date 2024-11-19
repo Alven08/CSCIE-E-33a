@@ -87,21 +87,52 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
     total = models.DecimalField(max_digits=9, decimal_places=2)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user_id": self.user.id,
+            "total": self.total,
+            "items": self.items
+        }
+
 
 class CartItem(models.Model):
-    Cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
+    Cart = models.ForeignKey(Cart,
+                             on_delete=models.CASCADE,
+                             related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "product": self.product,
+            "quantity": self.quantity
+        }
 
-class Wishlist(models.Model):
+
+class Wishlist(Cart):
     name = models.CharField(max_length=100)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="wishlists")
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=0)
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "wishlist_name": self.name,
+            "user_id": self.user.id,
+            "items": self.items
+        }
 
-class WishlistItem(models.Model):
-    Wishlist = models.ForeignKey(Wishlist, on_delete=models.CASCADE, related_name="items")
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=0)
+#
+# class WishlistItem(models.Model):
+#     wishlist = models.ForeignKey(Wishlist,
+#                                  on_delete=models.CASCADE,
+#                                  related_name="items")
+#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+#     quantity = models.IntegerField(default=0)
+#
+#     def serialize(self):
+#         return {
+#             "id": self.id,
+#             "product": self.product,
+#             "quantity": self.quantity
+#         }
