@@ -4,24 +4,15 @@ from django.db import models
 
 # Create your models here.
 class User(AbstractUser):
+    is_vendor = models.BooleanField(default=False)
+    vendor_name = models.CharField(max_length=255)
+
     def serialize(self):
         return {
             "id": self.id,
             "first_name": self.first_name,
             "last_name": self.last_name,
             "email": self.email
-        }
-
-
-class Vendor(AbstractUser):
-    vendor_name = models.CharField(max_length=255)
-
-    def serialize(self):
-        return {
-            "id": self.id,
-            "vendor_name": self.vendor_name,
-            "email": self.email,
-            "support_email": self.email
         }
 
 
@@ -32,7 +23,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=9, decimal_places=2)
     in_stock_quantity = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
-    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE, related_name="products")
+    vendor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="products")
     created_date = models.DateTimeField(auto_now_add=True)
 
     def serialize(self):
@@ -43,7 +34,7 @@ class Product(models.Model):
             "price": self.price,
             "in_stock_quantity": self.in_stock_quantity,
             "is_active": self.is_active,
-            "vendor": self.vendor
+            "vendor": self.User
         }
 
 
@@ -121,18 +112,3 @@ class Wishlist(Cart):
             "user_id": self.user.id,
             "items": self.items
         }
-
-#
-# class WishlistItem(models.Model):
-#     wishlist = models.ForeignKey(Wishlist,
-#                                  on_delete=models.CASCADE,
-#                                  related_name="items")
-#     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-#     quantity = models.IntegerField(default=0)
-#
-#     def serialize(self):
-#         return {
-#             "id": self.id,
-#             "product": self.product,
-#             "quantity": self.quantity
-#         }
