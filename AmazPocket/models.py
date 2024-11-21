@@ -12,6 +12,7 @@ class User(AbstractUser):
             "id": self.id,
             "first_name": self.first_name,
             "last_name": self.last_name,
+            "vendor_name": self.vendor_name,
             "email": self.email
         }
 
@@ -34,7 +35,7 @@ class Product(models.Model):
             "price": self.price,
             "in_stock_quantity": self.in_stock_quantity,
             "is_active": self.is_active,
-            "vendor": self.User
+            "vendor": self.vendor
         }
 
 
