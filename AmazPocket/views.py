@@ -3,6 +3,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
+from AmazPocket.models import User
+
 
 # Create your views here.
 def index(request):
@@ -38,3 +40,12 @@ def register(request):
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
+
+
+def profile(request):
+    if request.method == "GET":
+        user = User.objects.get(pk=request.user.id)
+
+        return render(request, "AmazPocket/profile.html", {
+            "profile": user.serialize()
+        })

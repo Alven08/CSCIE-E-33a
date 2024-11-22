@@ -1,0 +1,19 @@
+/* Common classes for styling */
+.m-t-1 {
+    margin-top: 0.5rem;
+}
+
+.m-b-1{
+    margin-bottom: 0.5rem;
+}
+
+/* Buttons' styles */
+.btn {
+    background-color: #28a745;
+    border-color: #28a745;
+    color: #fff;
+}
+
+.btn:hover {
+    background-color: #093e15;
+}
