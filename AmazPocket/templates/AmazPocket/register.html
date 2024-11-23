@@ -1,0 +1,50 @@
+{% extends "AmazPocket/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-5">
+                <h2 class="m-t-1">Register</h2>
+
+                {% if message %}
+                    <div>{{ message }}</div>
+                {% endif %}
+
+                <form action="{% url 'register' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input class="form-control" autofocus type="text" name="firstname" placeholder="First Name">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" autofocus type="text" name="lastname" placeholder="Last Name">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="email" name="email" placeholder="Email Address">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <input class="form-control" type="password" name="confirmation" placeholder="Confirm Password">
+                    </div>
+                    <div class="form-group">
+                        <input class="vendor-input" type="checkbox" name="vendor"
+                            onChange="changeVendorCheckbox(this)" />
+                        <label class="m-b-0 form-check-label" for="vendor">Are you a vendor?</label>
+                    </div>
+                    <div id="vendor-name" class="form-group" style="display:none">
+                        <input class="form-control" type="text" name="vendor_name" placeholder="Vendor Name"/>
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="Register">
+                </form>
+
+                <p class="m-t-1">Already have an account? <a href="{% url 'login' %}">Log In here.</a></p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/babel" src="{% static 'AmazPocket/register.js' %}"></script>
+{% endblock %}
