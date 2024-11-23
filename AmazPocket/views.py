@@ -1,3 +1,5 @@
+from sqlite3 import IntegrityError
+
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -15,9 +17,9 @@ def login_view(request):
     if request.method == 'POST':
 
         # Attempt to sign user in
-        username = request.POST["username"]
+        email = request.POST["email"]
         password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=email, password=password)
 
         # Check if authentication successful
         if user is not None:
@@ -38,8 +40,34 @@ def logout_view(request):
 
 def register(request):
     if request.method == "POST":
-        username = request.POST["username"]
+        password = request.POST["password"]
+        confirmation = request.POST["confirmation"]
+        if password != confirmation:
+            return render(request, "AmazPocket/register.html",
+                          {"message": "Passwords must match."})
+
+        firstname = request.POST["firstname"]
+        lastname = request.POST["lastname"]
         email = request.POST["email"]
+        vendor_name = None
+        is_vendor = False
+        if "vendor" in request.POST:
+            is_vendor = True
+            vendor_name = request.POST["vendor_name"]
+
+        try:
+            user = User.objects.create_user(first_name=firstname, last_name=lastname,
+                                            email=email, username=email, password=password,
+                                            is_vendor=is_vendor, vendor_name=vendor_name)
+        except IntegrityError:
+            return render(request, "AmazPocket/register.html",
+                          {"message": "Username already taken."})
+
+        login(request, user)
+        # TODO redirect to vendor page if it is a vendor.
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        return render(request, "AmazPocket/register.html")
 
 
 def profile(request):

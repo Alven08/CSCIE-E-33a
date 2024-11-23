@@ -5,7 +5,7 @@ from django.db import models
 # Create your models here.
 class User(AbstractUser):
     is_vendor = models.BooleanField(default=False)
-    vendor_name = models.CharField(max_length=255)
+    vendor_name = models.CharField(max_length=255, null=True)
 
     def serialize(self):
         return {
@@ -13,6 +13,7 @@ class User(AbstractUser):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "vendor_name": self.vendor_name,
+            "is_vendor": self.is_vendor,
             "email": self.email
         }
 
