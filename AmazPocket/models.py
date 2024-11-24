@@ -18,15 +18,42 @@ class User(AbstractUser):
         }
 
 
+class Category(models.Model):
+    """
+    Listing Category model representing a category
+    in which an item can be in.
+    it has three fields.
+    The is_active field by default is active
+    """
+    name = models.CharField(max_length=64, unique=True)
+    description = models.CharField(max_length=255)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        # verbose name and verbose name plural for the admin
+        # page to display the label properly
+        verbose_name = ("Product Category")
+        verbose_name_plural = ("Product Categories")
+
+    def __str__(self):
+        return f"{self.name}"
+
+
 class Product(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(max_length=500)
+    category = models.ForeignKey(Category,
+                                 on_delete=models.CASCADE,
+                                 related_name='products')
     img_url = models.URLField(null=True, blank=True)
     price = models.DecimalField(max_digits=9, decimal_places=2)
     in_stock_quantity = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
     vendor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="products")
     created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name}"
 
     def serialize(self):
         return {
@@ -114,3 +141,22 @@ class Wishlist(Cart):
             "user_id": self.user.id,
             "items": self.items
         }
+
+
+class Comment(models.Model):
+    """
+    Comment model representing a comment made to a product item.
+    created_date is auto fill in with current date and time.
+    """
+    comment = models.TextField(max_length=500)
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="comments"
+        )
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="comments"
+        )
+    created_date = models.DateTimeField(auto_now_add=True)

@@ -77,3 +77,7 @@ def profile(request):
         return render(request, "AmazPocket/profile.html", {
             "profile": user.serialize()
         })
+
+
+# def add_item(request):
+#     if request.method == "POST":
