@@ -20,6 +20,14 @@
     display: inline-block;
 }
 
+.bold {
+    font-weight: bold;
+}
+
+.border-bottom {
+    border-bottom: 2px solid #dee2e6 !important;
+}
+
 /* Buttons' styles */
 .btn {
     background-color: #28a745;
@@ -35,4 +43,9 @@
 .vendor-input {
     position: absolute;
     margin-top: .4rem;
+}
+
+/* Vendor Page */
+.vendor-buttons {
+    text-align: right;
 }

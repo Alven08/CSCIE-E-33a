@@ -3,8 +3,8 @@ from django.forms import ModelForm, Textarea
 
 class ProductForm(ModelForm):
     """
-    Listing Form that takes its meta
-    from the listing model
+    Product Form that takes its meta
+    from the product model
     """
     class Meta:
         model = Product
@@ -24,3 +24,5 @@ class ProductForm(ModelForm):
                 "class": "form-control",
                 "placeholder": f"Enter {field.label}"
             })
+
+

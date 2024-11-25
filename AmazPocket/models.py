@@ -62,6 +62,7 @@ class Product(models.Model):
             "description": self.description,
             "price": self.price,
             "in_stock_quantity": self.in_stock_quantity,
+            "img_url": self.img_url,
             "is_active": self.is_active,
             "vendor": self.vendor
         }
