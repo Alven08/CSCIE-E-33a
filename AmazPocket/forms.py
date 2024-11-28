@@ -8,7 +8,7 @@ class ProductForm(ModelForm):
     """
     class Meta:
         model = Product
-        fields = ['name', 'description', 'img_url', 'price',
+        fields = ['name', 'description', 'category', 'img_url', 'price',
                   'in_stock_quantity', 'is_active']
         widgets = {
             'description': Textarea()
