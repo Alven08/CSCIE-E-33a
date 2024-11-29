@@ -6,19 +6,19 @@
         <div class="col-md-12">
             <h1 class="display-2 border-bottom bold">{{ profile.vendor_name }}</h1>
             <div class="vendor-buttons">
-                <button type="button" class="btn btn-outline-success my-2 my-sm-0"
+                <button id="addUpdateProductButton" type="button" class="btn btn-outline-success my-2 my-sm-0"
                         data-toggle="modal" data-target="#exampleModal"
                         onclick="changeProductFormToPost()">Add New Product</button>
             </div>
         </div>
 
-        <div class="col-md-12">
+        <div id="vendor-products" class="col-md-12">
             {% for item in products %}
                 <div class="col-md-4">
-                    <a href="#">
+                    <a href="#" onclick="onProductClick({{ item.id }})">
                         <label>{{item.title}}</label>
                         <p>{{item.description}}</p>
-                        <img src="{{item.img_url}}" alt="item.title">
+                        <img class="product-img" src="{{item.img_url}}" alt="item.title">
                         <p class="p-price">Price: ${{item.price}}</p>
                         <p class="p-instock">In stock: {{ item.in_stock_quantity }}</p>
 
@@ -52,7 +52,7 @@
               </div>
               <div class="modal-footer">
                 <button  onclick="closeForm()"type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save New Product</button>
+                <button type="submit" class="btn btn-primary">Save New Product</button>
               </div>
             </div>
           </div>
@@ -68,3 +68,4 @@
 {% block script %}
     <script type="text/babel" src="{% static 'AmazPocket/profile.js' %}"></script>
 {% endblock %}
+

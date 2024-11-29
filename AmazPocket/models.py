@@ -38,6 +38,12 @@ class Category(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+    def serialize(self):
+        return {
+            "name": self.name,
+            "id": self.id
+        }
+
 
 class Product(models.Model):
     name = models.CharField(max_length=255)
@@ -64,7 +70,8 @@ class Product(models.Model):
             "in_stock_quantity": self.in_stock_quantity,
             "img_url": self.img_url,
             "is_active": self.is_active,
-            "vendor": self.vendor
+            "category": self.category.serialize(),
+            "vendor": self.vendor.serialize()
         }
 
 

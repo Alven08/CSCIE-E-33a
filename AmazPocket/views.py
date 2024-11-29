@@ -71,6 +71,9 @@ def register(request):
 
 
 def profile(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("index"))
+
     user = User.objects.get(pk=request.user.id)
     title = "Vendor page" if user.is_vendor else "Profile"
     products = None
@@ -92,6 +95,9 @@ def profile(request):
 
 
 def vendor_page(request, vendor_id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse("index"))
+
     user = User.objects.get(pk=vendor_id)
 
     return render(request, "AmazPocket/vendor.html", {
@@ -116,6 +122,12 @@ def category_products(request, category_id):
             "products": products
         })
 
+
+def product(request, product_id):
+    product_item = Product.objects.get(pk=product_id)
+    return JsonResponse({
+        "form": product_item.serialize()
+    }, status=200)
 
 def add_update_product(request):
     if request.method == "POST" or request.method == "PUT":

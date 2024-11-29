@@ -49,3 +49,13 @@
 .vendor-buttons {
     text-align: right;
 }
+
+#vendor-products .product-img {
+    width: 100%;
+    height: 400px;
+}
+
+#product-form input[type='checkbox']{
+    display: inline-block;
+    width: auto;
+}
