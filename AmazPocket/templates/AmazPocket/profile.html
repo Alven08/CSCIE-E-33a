@@ -5,22 +5,23 @@
     {% if profile.is_vendor %}
         <div class="col-md-12">
             <h1 class="display-2 border-bottom bold">{{ profile.vendor_name }}</h1>
-            <div class="vendor-buttons">
+            <div id="sub-header-vendor">
+                <h3>Your Products</h3>
                 <button id="addUpdateProductButton" type="button" class="btn btn-outline-success my-2 my-sm-0"
-                        data-toggle="modal" data-target="#exampleModal"
-                        onclick="changeProductFormToPost()">Add New Product</button>
+                    data-toggle="modal" data-target="#exampleModal"
+                    onclick="changeProductFormToPost()">Add New Product</button>
             </div>
         </div>
 
-        <div id="vendor-products" class="col-md-12">
+        <div id="vendor-products" class="row">
             {% for item in products %}
-                <div class="col-md-4">
+                <div class="col-md-4 product-space">
                     <a href="#"  data-toggle="modal" data-target="#exampleModal" onclick="onProductClick({{ item.id }})">
-                        <label>{{item.title}}</label>
+                        <label class="bold">{{item.name}}</label>
                         <p>{{item.description}}</p>
                         <img class="product-img" src="{{item.img_url}}" alt="item.title">
-                        <p class="p-price">Price: ${{item.price}}</p>
-                        <p class="p-instock">In stock: {{ item.in_stock_quantity }}</p>
+                        <p class="p-price"><strong>Price:</strong> ${{item.price}}</p>
+                        <p class="p-instock"><strong>In stock:</strong> {{ item.in_stock_quantity }}</p>
                     </a>
                     <!-- Delete form -->
                     <!-- For some reason pycharm does not support delete in HTML -->

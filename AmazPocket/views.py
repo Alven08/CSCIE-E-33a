@@ -80,7 +80,7 @@ def profile(request):
     orders = None
     new_product_form = None
     if user.is_vendor:
-        products = [product.serialize() for product in user.products.all()]
+        products = [product.serialize() for product in user.products.order_by("-created_date").all()]
         new_product_form = ProductForm()
     else:
         orders = [order.serialize() for order in user.orders.all()]

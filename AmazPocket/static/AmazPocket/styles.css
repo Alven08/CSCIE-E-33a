@@ -64,7 +64,35 @@
     height: 400px;
 }
 
+#vendor-products a {
+    color: black;
+}
+
+#vendor-products .product-space:hover {
+    background-color: #bee4c7;
+}
+
+#vendor-products a:hover {
+    text-decoration: none;
+    color: black;
+}
+
 #product-form input[type='checkbox']{
     display: inline-block;
     width: auto;
+}
+
+.p-price, .p-instock {
+    margin-bottom: 0;
+}
+
+.product-space {
+    padding-bottom: 1em;
+    padding-top: 1em;
+}
+
+#sub-header-vendor {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1em;
 }
