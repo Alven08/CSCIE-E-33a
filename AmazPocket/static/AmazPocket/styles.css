@@ -35,8 +35,17 @@
     color: #fff;
 }
 
+.btn.careful {
+    background-color: crimson;
+    border-color: crimson;
+}
+
 .btn:hover {
     background-color: #093e15;
+}
+
+.btn.careful:hover {
+    background-color: #540311;
 }
 
 /* Register page */

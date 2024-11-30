@@ -94,6 +94,7 @@ def profile(request):
     })
 
 
+# for when normal user goes to a vendor page
 def vendor_page(request, vendor_id):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse("index"))
@@ -123,28 +124,35 @@ def category_products(request, category_id):
         })
 
 
-def product(request, product_id):
-    product_item = Product.objects.get(pk=product_id)
-    return JsonResponse({
-        "form": product_item.serialize()
-    }, status=200)
+def product(request, product_id=None):
+    if request.method == "GET":
+        product_item = Product.objects.get(pk=product_id)
+        return JsonResponse({
+            "form": product_item.serialize()
+        }, status=200)
 
-def add_update_product(request):
-    if request.method == "POST" or request.method == "PUT":
-        product_form = ProductForm(request.POST)
+    elif request.method == "POST":
+        if product_id is not None:
+            current_product = get_object_or_404(Product, pk=product_id, vendor=request.user)
+            product_form = ProductForm(request.POST, instance=current_product)
+        else:
+            product_form = ProductForm(request.POST)
 
         if product_form.is_valid():
-            new_product = product_form.save(commit=False)
-            new_product.vendor = request.user
+            product_obj = product_form.save(commit=False)
 
-            if new_product.img_url is None:
+            if not hasattr(product_obj, "vendor"):
+                product_obj.vendor = request.user
+
+            if product_obj.img_url is None:
                 # default image if no image url is provided
-                new_product.img_url = (
+                product_obj.img_url = (
                     "https://encrypted-tbn0.gstatic.com/images"
                     "?q=tbn:ANd9GcQOtjqFKVwZWNCqI33H1OWcsUaZYww6FLLFAw&s"
                 )
-                new_product.save()
-                return HttpResponseRedirect(reverse("profile"))
+
+            product_obj.save()
+            return HttpResponseRedirect(reverse("profile"))
         else:
             product_form = ProductForm(request.POST)
             return JsonResponse({
@@ -157,10 +165,11 @@ def add_update_product(request):
         }, status=200)
 
 
-def delete_product(request, id):
-    if request.method == "DELETE":
+def delete_product(request, product_id):
+    # For some reason pycharm does not support delete in HTML
+    if request.method == "POST":
         try:
-            to_be_deleted = get_object_or_404(Product, id=id, vendor=request.user)
+            to_be_deleted = get_object_or_404(Product, id=product_id, vendor=request.user)
             to_be_deleted.delete()
             return HttpResponseRedirect(reverse("profile"))
         except Product.DoesNotExist:

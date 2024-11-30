@@ -15,44 +15,44 @@
         <div id="vendor-products" class="col-md-12">
             {% for item in products %}
                 <div class="col-md-4">
-                    <a href="#" onclick="onProductClick({{ item.id }})">
+                    <a href="#"  data-toggle="modal" data-target="#exampleModal" onclick="onProductClick({{ item.id }})">
                         <label>{{item.title}}</label>
                         <p>{{item.description}}</p>
                         <img class="product-img" src="{{item.img_url}}" alt="item.title">
                         <p class="p-price">Price: ${{item.price}}</p>
                         <p class="p-instock">In stock: {{ item.in_stock_quantity }}</p>
-
-                        <!-- Delete form -->
-                        <form id="product-delete" action="{% url 'delete_product' item.id %}" method="DELETE">
-                          {% csrf_token %}
-                          <button type="submit" class="btn btn-primary">Delete</button>
-                        </form>
                     </a>
+                    <!-- Delete form -->
+                    <!-- For some reason pycharm does not support delete in HTML -->
+                    <form id="product-delete" action="{% url 'delete_product' item.id %}" method="POST">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-primary careful">Delete</button>
+                    </form>
                 </div>
             {% empty %}
                 <h4>You have not products yet.</h4>
             {% endfor %}
         </div>
 
-        <!-- Modal -->
+        <!-- Modal for add/update -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Add/Update Product</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" onclick="closeForm()" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <div class="modal-body">
-                  <form id="product-form" action="{% url 'save_product' %}" method="POST">
+                  <form id="product-form" method="POST" action="{% url 'product' %}">
                       {% csrf_token %}
                       {{form}}
+                      <div class="modal-footer">
+                        <button onclick="closeForm()" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save New Product</button>
+                      </div>
                   </form>
-              </div>
-              <div class="modal-footer">
-                <button  onclick="closeForm()"type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Save New Product</button>
               </div>
             </div>
           </div>
