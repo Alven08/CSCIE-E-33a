@@ -2,9 +2,9 @@
 Final Project for CSCIE E-33a
 
 
-python manage.py makemigrations
+python manage.py makemigrations AmazPocket
 
 python manage.py migrate
 
 Load the fixtures 
-python manage.py loaddate AmazPocket/fixtures/initial_data.json
+python manage.py loaddata AmazPocket/fixtures/initial_data.json

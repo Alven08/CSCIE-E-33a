@@ -1,0 +1,62 @@
+{% extends "AmazPocket/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div class="col-md-12">
+        <h2 class="m-t-1 display-2 border-bottom bold center-text">{{ title }}</h2>
+    </div>
+
+    <div id="category-products" class="row">
+        {% for item in products %}
+            <div class="col-md-4 product-space">
+                <a href="#"  data-toggle="modal" data-target="#exampleModal" onclick="onProductClick({{ item.id }})">
+                    <label class="bold">{{item.name}}</label>
+                    <img class="product-img" src="{{item.img_url}}" alt="item.title">
+                </a>
+            </div>
+        {% empty %}
+            <h4>You have not products yet.</h4>
+        {% endfor %}
+    </div>
+
+    <!-- Modal for add/update -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add/Update Product</h5>
+            <button type="button" onclick="closeForm()" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <div id="product-modal">
+                  <!-- img goes here -->
+                  <p id="product-description"></p>
+                  <p id="id_price" class="p-price"></p>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Add to Cart</button>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                    </li>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/babel" src="{% static 'AmazPocket/product.js' %}"></script>
+{% endblock %}
+
