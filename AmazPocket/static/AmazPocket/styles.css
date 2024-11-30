@@ -20,6 +20,14 @@
     display: inline-block;
 }
 
+.bold {
+    font-weight: bold;
+}
+
+.border-bottom {
+    border-bottom: 2px solid #dee2e6 !important;
+}
+
 /* Buttons' styles */
 .btn {
     background-color: #28a745;
@@ -27,12 +35,64 @@
     color: #fff;
 }
 
+.btn.careful {
+    background-color: crimson;
+    border-color: crimson;
+}
+
 .btn:hover {
     background-color: #093e15;
+}
+
+.btn.careful:hover {
+    background-color: #540311;
 }
 
 /* Register page */
 .vendor-input {
     position: absolute;
     margin-top: .4rem;
+}
+
+/* Vendor Page */
+.vendor-buttons {
+    text-align: right;
+}
+
+#vendor-products .product-img {
+    width: 100%;
+    height: 400px;
+}
+
+#vendor-products a {
+    color: black;
+}
+
+#vendor-products .product-space:hover {
+    background-color: #bee4c7;
+}
+
+#vendor-products a:hover {
+    text-decoration: none;
+    color: black;
+}
+
+#product-form input[type='checkbox']{
+    display: inline-block;
+    width: auto;
+}
+
+.p-price, .p-instock {
+    margin-bottom: 0;
+}
+
+.product-space {
+    padding-bottom: 1em;
+    padding-top: 1em;
+}
+
+#sub-header-vendor {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1em;
 }

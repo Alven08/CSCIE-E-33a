@@ -1,0 +1,83 @@
+[
+  {
+    "model": "AmazPocket.Category",
+    "pk": 1,
+    "fields": {
+      "name": "Toys",
+      "description": "Category for toys kids all ages"
+    }
+  },
+  {
+    "model": "AmazPocket.Category",
+    "pk": 2,
+    "fields": {
+      "name": "Clothing",
+      "description": "Category for clothing"
+    }
+  },
+  {
+    "model": "AmazPocket.Category",
+    "pk": 3,
+    "fields": {
+      "name": "Footwear",
+      "description": "Category for footwear"
+    }
+  },
+  {
+    "model": "AmazPocket.Category",
+    "pk": 4,
+    "fields": {
+      "name": "Electronic",
+      "description": "Category for electronic devices"
+    }
+  },
+  {
+    "model": "AmazPocket.Category",
+    "pk": 5,
+    "fields": {
+      "name": "Other",
+      "description": "Category for any other type of products"
+    }
+  },
+  {
+    "model": "AmazPocket.User",
+    "pk": 1,
+    "fields": {
+      "first_name": "SonyFN",
+      "last_name": "SonyLN",
+      "email": "sony@sony.com",
+      "username": "sony@sony.com",
+      "password": "pbkdf2_sha256$870000$OVdIz2RVDDQBjaOclfOp0R$mTF8CljrpKKYlNuIXV4TQefG+eua10mSh3S3Y+U85/U=",
+      "is_vendor": "True",
+      "vendor_name": "Sony"
+    }
+  },
+  {
+    "model": "AmazPocket.Product",
+    "pk": 1,
+    "fields": {
+      "name": "RC Car",
+      "description": "Remote control car",
+      "category": 1,
+      "img_url": "https://m.media-amazon.com/images/I/81ap+We87nL.jpg",
+      "price": 50.00,
+      "in_stock_quantity": 5,
+      "vendor": 1,
+      "created_date": "2024-11-28 18:30"
+    }
+  },
+  {
+    "model": "AmazPocket.Product",
+    "pk": 2,
+    "fields": {
+      "name": "STEM Robot",
+      "description": "STEM Robot toy for ages 5-15",
+      "category": 1,
+      "img_url": "https://i5.walmartimages.com/seo/Lvelia-Robot-Toy-for-Kids-Intelligent-Electronic-Walking-Dancing-Robot-Toys-with-Flashing-Lights-and-Music-Orange_b69734a0-45cd-4df6-a8c4-4b8d1d2286cd.710727f484426e80d37d32a6d52cefa1.jpeg?odnHeight=768&odnWidth=768&odnBg=FFFFFF",
+      "price": 120.00,
+      "in_stock_quantity": 3,
+      "vendor": 1,
+      "created_date": "2024-11-28 18:30"
+    }
+  }
+]
