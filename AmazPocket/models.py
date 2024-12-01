@@ -14,7 +14,8 @@ class User(AbstractUser):
             "last_name": self.last_name,
             "vendor_name": self.vendor_name,
             "is_vendor": self.is_vendor,
-            "email": self.email
+            "email": self.email,
+            "wishlists":
         }
 
 
@@ -143,6 +144,7 @@ class CartItem(models.Model):
 
 class Wishlist(Cart):
     name = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="storages")
 
     def serialize(self):
         return {
@@ -150,6 +152,18 @@ class Wishlist(Cart):
             "wishlist_name": self.name,
             "user_id": self.user.id,
             "items": self.items
+        }
+
+class WishlistItem(models.Model):
+    Wishlist = models.ForeignKey(Wishlist,
+                             on_delete=models.CASCADE,
+                             related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "product": self.product
         }
 
 
