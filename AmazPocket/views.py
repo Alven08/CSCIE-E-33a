@@ -13,6 +13,26 @@ def index(request):
     return render(request, "AmazPocket/index.html")
 
 
+def load_products(request):
+    # Get start and end points
+    start = int(request.GET.get("start") or 0)
+    end = int(request.GET.get("end") or (start + 9))
+    cat_id = int(request.GET.get("cat-id") or -1)
+
+    if cat_id != -1:
+        category = Category.objects.get(pk=cat_id)
+        cat_products = (category.products.filter(is_active=True, in_stock_quantity__gt=0)
+                        .order_by("-created_date").all())
+        products = [product.serialize() for product in cat_products[start:end]]
+    else:
+        all_products = Product.objects.filter(is_active=True, in_stock_quantity__gt=0).order_by("-created_date").all()
+        products = [product.serialize() for product in all_products[start:end]]
+
+    return JsonResponse({
+        "products": products
+    })
+
+
 def login_view(request):
     if request.method == 'POST':
 
@@ -116,11 +136,9 @@ def categories(request):
 
 def category_products(request, category_id):
     category = Category.objects.get(pk=category_id)
-    cat_products = category.products.filter(is_active=True).order_by("-created_date").all()
-    products = [product.serialize() for product in cat_products]
-    return render(request, "AmazPocket/category_products.html", {
+    return render(request, "AmazPocket/index.html", {
             "title": "Category: %s" % category,
-            "products": products
+            "cat_id": category.id
         })
 
 
@@ -176,5 +194,4 @@ def delete_product(request, product_id):
             return JsonResponse({
                 "error": "Product to be deleted does not exist."
             }, status=404)
-
 
