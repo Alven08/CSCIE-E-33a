@@ -15,7 +15,7 @@ class User(AbstractUser):
             "vendor_name": self.vendor_name,
             "is_vendor": self.is_vendor,
             "email": self.email,
-            "wishlists":
+            "wishlists": self.storages
         }
 
 
