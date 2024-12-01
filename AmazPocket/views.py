@@ -116,9 +116,9 @@ def categories(request):
 
 def category_products(request, category_id):
     category = Category.objects.get(pk=category_id)
-    cat_products = category.products.filter(is_active=True)
+    cat_products = category.products.filter(is_active=True).order_by("-created_date").all()
     products = [product.serialize() for product in cat_products]
-    return render(request, "AmazPocket/categories.html", {
+    return render(request, "AmazPocket/category_products.html", {
             "title": "Category: %s" % category,
             "products": products
         })

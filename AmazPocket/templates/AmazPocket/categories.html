@@ -4,20 +4,21 @@
 {% block body %}
     <div class="container">
         <div class="row justify-content-md-center">
-            <div class="col-md-5">
-                <h2 class="m-t-1">Categories</h2>
+            <div class="col-md-12">
+                <h2 class="m-t-1 display-2 border-bottom bold center-text">Categories</h2>
 
-                <ul>
+                <div class="row categories-items">
                     {% for cat in categories %}
-                        <li>
+                        <div class="col-md-4">
                             <a href="{% url 'category_products' category_id=cat.id %}">
-                                {{ cat }}
+                                <img class="cat-img" src="{{ cat.img_url }}" alt="cat-image">
+                                <h3>{{ cat }}</h3>
                             </a>
-                        </li>
+                        </div>
                     {% empty %}
-                        <li>No listings available</li>
+                        <h2>No listings available</h2>
                     {% endfor %}
-                </ul>
+                </div>
             </div>
         </div>
     </div>

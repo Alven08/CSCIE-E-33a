@@ -27,6 +27,7 @@ class Category(models.Model):
     """
     name = models.CharField(max_length=64, unique=True)
     description = models.CharField(max_length=255)
+    img_url = models.URLField(blank=False, null=False)
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -41,7 +42,8 @@ class Category(models.Model):
     def serialize(self):
         return {
             "name": self.name,
-            "id": self.id
+            "id": self.id,
+            "img_url": self.img_url
         }
 
 

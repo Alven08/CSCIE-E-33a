@@ -4,7 +4,8 @@
     "pk": 1,
     "fields": {
       "name": "Toys",
-      "description": "Category for toys kids all ages"
+      "description": "Category for toys kids all ages",
+      "img_url": "https://img.pikbest.com/origin/09/16/68/53jpIkbEsTDIE.png!bw700"
     }
   },
   {
@@ -12,7 +13,8 @@
     "pk": 2,
     "fields": {
       "name": "Clothing",
-      "description": "Category for clothing"
+      "description": "Category for clothing",
+      "img_url": "https://png.pngtree.com/png-clipart/20240315/original/pngtree-clothing-garment-apparel-png-image_14596521.png"
     }
   },
   {
@@ -20,7 +22,8 @@
     "pk": 3,
     "fields": {
       "name": "Footwear",
-      "description": "Category for footwear"
+      "description": "Category for footwear",
+      "img_url": "https://png.pngtree.com/png-clipart/20230825/original/pngtree-realistic-classic-footwear-boots-shoe-picture-image_8728945.png"
     }
   },
   {
@@ -28,7 +31,8 @@
     "pk": 4,
     "fields": {
       "name": "Electronic",
-      "description": "Category for electronic devices"
+      "description": "Category for electronic devices",
+      "img_url": "https://sawafy.com/uploads/category/category_66e8874a9b1f81-82142319.png"
     }
   },
   {
@@ -36,7 +40,8 @@
     "pk": 5,
     "fields": {
       "name": "Other",
-      "description": "Category for any other type of products"
+      "description": "Category for any other type of products",
+      "img_url": "https://lawrieco.com.au/wp-content/uploads/2022/11/j7s1cq.png"
     }
   },
   {
