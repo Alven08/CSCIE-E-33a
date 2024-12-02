@@ -42,7 +42,7 @@ function loadProducts() {
             data.products.forEach(add_products);
         else
             endOfProducts = true;
-    })
+    });
 }
 
 // Add a new product with given contents to DOM

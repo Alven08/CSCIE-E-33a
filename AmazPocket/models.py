@@ -7,6 +7,10 @@ class User(AbstractUser):
     is_vendor = models.BooleanField(default=False)
     vendor_name = models.CharField(max_length=255, null=True)
 
+    def get_wishlists(self):
+        all = self.storages.all()
+        return [{"id": list.id, "name": list.name} for list in all]
+
     def serialize(self):
         return {
             "id": self.id,
@@ -15,7 +19,7 @@ class User(AbstractUser):
             "vendor_name": self.vendor_name,
             "is_vendor": self.is_vendor,
             "email": self.email,
-            "wishlists": self.storages
+            "wishlists": self.get_wishlists()
         }
 
 
@@ -123,7 +127,7 @@ class Cart(models.Model):
             "id": self.id,
             "user_id": self.user.id,
             "total": self.total,
-            "items": self.items
+            "items": self.items.serialize()
         }
 
 
@@ -146,13 +150,17 @@ class Wishlist(models.Model):
     name = models.CharField(max_length=100)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="storages")
 
+    def __str__(self):
+        return f"{self.name}"
+
     def serialize(self):
         return {
             "id": self.id,
-            "wishlist_name": self.name,
+            "name": self.name,
             "user_id": self.user.id,
-            "items": self.items
+            # "items": self.items.serialize()
         }
+
 
 class WishlistItem(models.Model):
     Wishlist = models.ForeignKey(Wishlist,

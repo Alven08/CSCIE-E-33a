@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
-from AmazPocket.models import User, Category, Product
+from AmazPocket.models import User, Category, Product, Wishlist
 from AmazPocket.forms import ProductForm
 
 # Create your views here.
@@ -195,3 +195,21 @@ def delete_product(request, product_id):
                 "error": "Product to be deleted does not exist."
             }, status=404)
 
+
+def get_user_wishlists(request):
+    wishlists = Wishlist.objects.filter(user=request.user).all()
+    lists = [list.serialize() for list in wishlists]
+    return JsonResponse({"wishlist": lists}, status=200)
+
+def wishlist(request, wishlist_id=None):
+    if request.method == "GET":
+        list = get_object_or_404(Wishlist, id=wishlist_id)
+        return render(request, "AmazPocket/index.html", {
+            "title": "Wishlist: %s" % list,
+            "list_id": list.id
+        })
+    else:
+        name = request.POST.get("name")
+        if name:
+            new_list = Wishlist.objects.create(name=name, user=request.user)
+            return HttpResponse(200)
