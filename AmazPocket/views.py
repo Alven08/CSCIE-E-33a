@@ -201,6 +201,7 @@ def get_user_wishlists(request):
     lists = [list.serialize() for list in wishlists]
     return JsonResponse({"wishlist": lists}, status=200)
 
+
 def wishlist(request, wishlist_id=None):
     if request.method == "GET":
         list = get_object_or_404(Wishlist, id=wishlist_id)
@@ -212,4 +213,4 @@ def wishlist(request, wishlist_id=None):
         name = request.POST.get("name")
         if name:
             new_list = Wishlist.objects.create(name=name, user=request.user)
-            return HttpResponse(200)
+            return get_user_wishlists(request)
