@@ -132,7 +132,7 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
-    Cart = models.ForeignKey(Cart,
+    cart = models.ForeignKey(Cart,
                              on_delete=models.CASCADE,
                              related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -162,7 +162,7 @@ class Wishlist(models.Model):
 
 
 class WishlistItem(models.Model):
-    Wishlist = models.ForeignKey(Wishlist,
+    wishlist = models.ForeignKey(Wishlist,
                              on_delete=models.CASCADE,
                              related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

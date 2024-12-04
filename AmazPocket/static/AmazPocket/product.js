@@ -26,8 +26,8 @@ function loadProducts() {
     // productCatId == null && productWishId == null
     if (listTypeSetup === false) {
         let productsContainer = document.getElementById("products-container")
-        productCatId = productsContainer.dataset.catId == "" ? -1 : productsContainer.dataset.catId ;
-        productWishId = productsContainer.dataset.wishId == "" ? -1 : productsContainer.dataset.wishId;
+        productCatId = Number(productsContainer.dataset.catId == "" ? -1 : productsContainer.dataset.catId);
+        productWishId = Number(productsContainer.dataset.wishId == "" ? -1 : productsContainer.dataset.wishId);
         listTypeSetup = true;
     }
 
@@ -58,7 +58,6 @@ function add_products(content) {
     // boostrap div
     const container = document.createElement("div");
     container.className = "col-md-4 product-space";
-    // container.innerHTML = content
 
     // A tag to open modal
     const aTag = document.createElement("a");
@@ -102,7 +101,7 @@ function onProductClick(product_id) {
         method: 'GET'
     })
         .then(response => response.json())
-        .then(response => response.form)
+        // .then(response => response.form)
         .then(data => {
             // Remove any pre-existing img tags
             const currentImg = document.getElementById("selected-product-img");
@@ -111,36 +110,48 @@ function onProductClick(product_id) {
 
             const parentModel = document.getElementById("product-modal");
             let img_element =  document.createElement("img");
-            img_element.src = data.img_url;
+            img_element.src = data.form.img_url;
             img_element.id = "selected-product-img";
-            img_element.alt = data.name;
+            img_element.alt = data.form.name;
             parentModel.prepend(img_element);
 
-            document.getElementById("product-description").innerHTML = data.description;
-            document.getElementById("id_price").innerHTML = `<strong>Price:</strong> $${data.price}`;
-            document.getElementById("exampleModalLabel").innerHTML = data.name;
-            document.getElementById("sell-by").innerHTML = `Sell by <strong>${data.vendor.vendor_name}</strong>`;
+            document.getElementById("product-description").innerHTML = data.form.description;
+            document.getElementById("id_price").innerHTML = `<strong>Price:</strong> $${data.form.price}`;
+            document.getElementById("exampleModalLabel").innerHTML = data.form.name;
+            document.getElementById("sell-by").innerHTML = `Sell by <strong>${data.form.vendor.vendor_name}</strong>`;
 
             // Add wishlist items from layout to product modal
-            populateModalWishlists(product_id);
+            populateModalWishlists(product_id, data.wishlists);
         });
 }
 
 
-function populateModalWishlists(product_id) {
-    const wishlist_dd_items = document.querySelectorAll(".wishlist-name-item");
+function populateModalWishlists(product_id, wishlists) {
+    const menu = document.getElementById("product-modal-wishlist-menu");
     const wishlist_container = document.getElementById("product-modal-wishlist-menu");
-
     Array.from(wishlist_container.children).forEach((item) => item.remove());
 
-    wishlist_dd_items.forEach((item) => {
-        const copy = item.cloneNode(true);
-        copy.className = "dropdown-item wishlist-name-item-product";
-        href_part = copy.href.split("/");
-        copy.href = "#";
-        copy.addEventListener("click", () => addProductToWishlist(href_part[4], product_id));
-        wishlist_container.append(copy);
-    });
+    if (wishlists.length > 0) {
+        wishlists.forEach((content) => {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "dropdown-item wishlist-name-item-product";
+            button.innerHTML = content.name;
+            if (content.is_in_list !== undefined) {
+                button.disabled = content.is_in_list;
+            } else {
+                button.addEventListener("click", () => addProductToWishlist(content.id, product_id));
+            }
+
+            menu.prepend(button);
+        });
+    }
+    else {
+        const item = document.createElement("p");
+        item.className = "dropdown-item wishlist-name-item";
+        item.innerHTML = "You do not have any wishlists.";
+        menu.prepend(item);
+    }
 }
 
 function addProductToWishlist(wish_id, prod_id) {
@@ -149,12 +160,16 @@ function addProductToWishlist(wish_id, prod_id) {
         "product_id": prod_id
     }
 
-    fetch(`/add-to-wishlist?wishlist_id=${wish_id}&product_id=${prod_id}`, {
+    const csrftoken = getCookie('csrftoken');
+
+    fetch(`/add-to-wishlist/${wish_id}/${prod_id}/`, {
         method: 'POST',
-        body: data
+        headers: {
+        'X-CSRFToken': csrftoken
+        }
     })
-        .then(response => response.json())
-        .then(response => {
-            alert("all good");
-        });
+    .then(response => response.json())
+    .then(data => {
+        onProductClick(prod_id);
+    });
 }
