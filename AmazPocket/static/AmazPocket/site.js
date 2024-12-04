@@ -49,7 +49,6 @@ function addWishlishItems(list) {
         });
     }
 
-
     const menu = document.getElementById("wishlist-dropdown-menu");
     if (list.length > 0) {
         list.forEach((content) => {
@@ -62,7 +61,7 @@ function addWishlishItems(list) {
     }
     else {
         const item = document.createElement("p");
-        item.className = "dropdown-item";
+        item.className = "dropdown-item wishlist-name-item";
         item.innerHTML = "You do not have any wishlists.";
         menu.prepend(item);
     }

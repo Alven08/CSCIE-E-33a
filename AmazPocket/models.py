@@ -157,8 +157,7 @@ class Wishlist(models.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "user_id": self.user.id,
-            # "items": self.items.serialize()
+            "user_id": self.user.id
         }
 
 

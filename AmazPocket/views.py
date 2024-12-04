@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
-from AmazPocket.models import User, Category, Product, Wishlist
+from AmazPocket.models import User, Category, Product, Wishlist, WishlistItem
 from AmazPocket.forms import ProductForm
 
 # Create your views here.
@@ -18,12 +18,17 @@ def load_products(request):
     start = int(request.GET.get("start") or 0)
     end = int(request.GET.get("end") or (start + 9))
     cat_id = int(request.GET.get("cat-id") or -1)
+    wish_id = int(request.GET.get("wish-id") or -1)
 
     if cat_id != -1:
         category = Category.objects.get(pk=cat_id)
         cat_products = (category.products.filter(is_active=True, in_stock_quantity__gt=0)
                         .order_by("-created_date").all())
         products = [product.serialize() for product in cat_products[start:end]]
+    elif wish_id != -1:
+        wishlist = Wishlist.objects.get(pk=wish_id, user=request.user)
+        wish_products = wishlist.items.all()
+        products = [product.serialize() for product in wish_products[start:end]]
     else:
         all_products = Product.objects.filter(is_active=True, in_stock_quantity__gt=0).order_by("-created_date").all()
         products = [product.serialize() for product in all_products[start:end]]
@@ -145,8 +150,10 @@ def category_products(request, category_id):
 def product(request, product_id=None):
     if request.method == "GET":
         product_item = Product.objects.get(pk=product_id)
+        # current_user_lists = get_user_wishlists(request)
         return JsonResponse({
-            "form": product_item.serialize()
+            "form": product_item.serialize(),
+            # "user_wishlists": current_user_lists
         }, status=200)
 
     elif request.method == "POST":
@@ -207,10 +214,34 @@ def wishlist(request, wishlist_id=None):
         list = get_object_or_404(Wishlist, id=wishlist_id)
         return render(request, "AmazPocket/index.html", {
             "title": "Wishlist: %s" % list,
-            "list_id": list.id
+            "wish_id": list.id
         })
     else:
         name = request.POST.get("name")
         if name:
             new_list = Wishlist.objects.create(name=name, user=request.user)
             return get_user_wishlists(request)
+
+
+def delete_wishlist(request, wishlist_id):
+    # For some reason pycharm does not support delete in HTML
+    if request.method == "POST":
+        try:
+            to_be_deleted = get_object_or_404(Wishlist, id=wishlist_id, vendor=request.user)
+            to_be_deleted.delete()
+            return JsonResponse({ "success": True }, status=200)
+        except Product.DoesNotExist:
+            return JsonResponse({
+                "error": "Wishlist does not exist."
+            }, status=404)
+
+
+def add_to_wishlist(request, wishlist_id, product_id):
+    if request.method == "POST":
+        product = get_object_or_404(Product, id=product_id)
+        wishlist = get_object_or_404(Wishlist, id=wishlist_id)
+
+        item, created = (WishlistItem.objects
+                         .get_or_create(Wishlist=wishlist, product=product))
+
+        return JsonResponse({ "success": True }, status=200)

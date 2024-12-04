@@ -8,7 +8,7 @@
         </div>
     {% endif %}
 
-    <div id="products-container" class="row">
+    <div id="products-container"  data-cat-id="{{ cat_id }}" data-wish-id="{{ wish_id }}" class="row">
         <!-- Add Products Here -->
     </div>
 
@@ -31,17 +31,16 @@
 
                   <div class="modal-footer">
                     <button type="button" class="btn btn-primary">Add to Cart</button>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Action</a>
-                            <a class="dropdown-item" href="#">Another action</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
-                        </div>
-                    </li>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Add to Wishlist
+                      </button>
+                      <div id="product-modal-wishlist-menu" class="dropdown-menu">
+{#                        <a class="dropdown-item" href="#">Action</a>#}
+{#                        <a class="dropdown-item" href="#">Another action</a>#}
+{#                        <a class="dropdown-item" href="#">Something else here</a>#}
+                      </div>
+                    </div>
                   </div>
               </div>
           </div>

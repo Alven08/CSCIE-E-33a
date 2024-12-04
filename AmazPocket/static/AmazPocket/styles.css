@@ -52,6 +52,12 @@
     background-color: #540311;
 }
 
+.btn-success.active, .btn-success:active, .show>.btn-success.dropdown-toggle {
+    background-color: #093e15;
+    background-image: none;
+    border-color: #093e15;
+}
+
 /* Register page */
 .vendor-input {
     position: absolute;
@@ -127,24 +133,6 @@
 .categories-items div a:hover {
     text-decoration: none;
 }
-
-/*#category-products img {*/
-/*    width: 100%;*/
-/*    height: 400px;*/
-/*}*/
-
-/*#category-products a {*/
-/*    color: black;*/
-/*}*/
-
-/*#category-products .product-space:hover {*/
-/*    background-color: #bee4c7;*/
-/*}*/
-
-/*#category-products a:hover {*/
-/*    text-decoration: none;*/
-/*    color: black;*/
-/*}*/
 
 #product-modal #selected-product-img {
     width: 100%;
