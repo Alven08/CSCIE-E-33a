@@ -20,6 +20,8 @@
     <!-- Style Script -->
     <link href="{% static 'AmazPocket/styles.css' %}" rel="stylesheet">
 
+    <!-- Javascript -->
+    <script src="{% static 'AmazPocket/site.js' %}"></script>
     {% block script %}
     {% endblock %}
 </head>
@@ -38,17 +40,18 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'categories' %}">Categories</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Dropdown
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle wishlist-dropdown" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Wishlists
+                        </a>
+                        <div id="wishlist-dropdown-menu" class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" data-toggle="modal" data-target="#wishlistModal" href="#">Create new wishlist</a>
+                        </div>
+                    </li>
+                {% endif %}
                 <form class="form-inline my-2 my-lg-0">
                   <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
                   <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
@@ -83,6 +86,35 @@
                 <div class="content">
                     {% block body %}
                     {% endblock %}
+
+                    <div class="modal fade" id="wishlistModal" tabindex="-1" aria-labelledby="wishlistModal" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="wishlistModalLabel">Create New Wishlist</h5>
+                            <button type="button" id="button-wishlist-modal-close" class="close"
+                                    data-dismiss="modal" aria-label="Close" onclick="onWishlistModalClose()">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                              <div id="wishlist-modal">
+                                  <form id="create-wishlist-form">
+                                      {% csrf_token %}
+                                      <div>
+                                        <label for="id_wish_name">Name:</label>
+                                        <input type="text" name="name" maxlength="255" class="form-control" placeholder="Enter Name" required="" id="id_wish_name">
+                                      </div>
+
+                                      <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Create New Wishlist</button>
+                                      </div>
+                                  </form>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 </div>
             </div>
         </div>

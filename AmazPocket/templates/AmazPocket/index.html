@@ -2,38 +2,67 @@
 {% load static %}
 
 {% block body %}
+    {% if title %}
+        <div class="col-md-12">
+            <h2 class="m-t-1 display-2 border-bottom bold center-text">{{ title }}</h2>
+        </div>
 
-    <h1>Here!!!</h1>
+        {% if wish_id %}
+            <div id="sub-header-wishlist">
+                <div>
+                    <button id="move-wishlist-to-cart" type="button" class="btn btn-outline-success my-2 my-sm-0 m-r-1" onclick="changeProductFormToPost()">Move Items to Cart</button>
+                    <button id="delete-wishlist" type="button" class="btn careful my-2 my-sm-0" onclick="deleteWishlist({{ wish_id }})">Delete Wishlist</button>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
 
+    <div id="products-container"  data-cat-id="{{ cat_id }}" data-wish-id="{{ wish_id }}" class="row">
+        <!-- Add Products Here -->
+    </div>
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-  Launch demo modal
-</button>
+    <!-- Modal for product -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add/Update Product</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <div id="product-modal">
+                  <!-- img goes here -->
+                  <p id="product-description"></p>
+                  <p id="sell-by"></p>
+                  <p id="id_price" class="p-price"></p>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" {% if is_in_cart %}disabled{% endif %}>{{ is_in_cart|yesno:"Already in the cart,Add to Cart" }}</button>
+
+                      {% if wish_id %}
+                         <button id="remove-from-wishlist" type="button"
+                                 class="btn careful" onclick="removeFromWishlist({{ wish_id }})">Remove from Wishlist</button>
+                      {% else %}
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Add to Wishlist
+                          </button>
+                          <div id="product-modal-wishlist-menu" class="dropdown-menu">
+                            <!-- Wishlist names go here -->
+                          </div>
+                        </div>
+                      {% endif %}
+                  </div>
+              </div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
 {% endblock %}
 
 {% block script %}
-    <script src="{% static 'AmazPocket/index.js' %}"></script>
+    <script src="{% static 'AmazPocket/product.js' %}"></script>
 {% endblock %}

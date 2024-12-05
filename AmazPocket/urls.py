@@ -11,7 +11,17 @@ urlpatterns = [
     path("categories", views.categories, name="categories"),
     path("category/<int:category_id>", views.category_products, name="category_products"),
 
+    path("load-products", views.load_products, name="load_products"),
+
     path("product", views.product, name="product"),
     path("product/<int:product_id>/", views.product, name="product_with_param"),
-    path("product/delete/<int:product_id>/", views.delete_product, name="delete_product")
+    path("product/delete/<int:product_id>/", views.delete_product, name="delete_product"),
+
+    path("get-wishlists", views.get_user_wishlists, name="get_user_wishlists"),
+    path("wishlist", views.wishlist, name="wishlist"),
+    path("wishlist/<int:wishlist_id>/", views.wishlist, name="wishlist_with_param"),
+    path("add-to-wishlist/<int:wishlist_id>/<int:product_id>/", views.add_to_wishlist, name="add_to_wishlist"),
+    path("remove-from-wishlist/<int:wishlist_id>/<int:product_id>/",
+         views.remove_from_wishlist, name="remove_from_wishlist"),
+    path("wishlist/delete/<int:wishlist_id>/", views.delete_wishlist, name="delete_wishlist")
 ]

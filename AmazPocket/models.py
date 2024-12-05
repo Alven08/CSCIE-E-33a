@@ -7,6 +7,10 @@ class User(AbstractUser):
     is_vendor = models.BooleanField(default=False)
     vendor_name = models.CharField(max_length=255, null=True)
 
+    def get_wishlists(self):
+        all = self.storages.all()
+        return [{"id": list.id, "name": list.name} for list in all]
+
     def serialize(self):
         return {
             "id": self.id,
@@ -14,7 +18,8 @@ class User(AbstractUser):
             "last_name": self.last_name,
             "vendor_name": self.vendor_name,
             "is_vendor": self.is_vendor,
-            "email": self.email
+            "email": self.email,
+            "wishlists": self.get_wishlists()
         }
 
 
@@ -115,19 +120,19 @@ class OrderItem(models.Model):
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
-    total = models.DecimalField(max_digits=9, decimal_places=2)
+    total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
     def serialize(self):
         return {
             "id": self.id,
             "user_id": self.user.id,
             "total": self.total,
-            "items": self.items
+            "items": self.items.serialize()
         }
 
 
 class CartItem(models.Model):
-    Cart = models.ForeignKey(Cart,
+    cart = models.ForeignKey(Cart,
                              on_delete=models.CASCADE,
                              related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -141,15 +146,31 @@ class CartItem(models.Model):
         }
 
 
-class Wishlist(Cart):
+class Wishlist(models.Model):
     name = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="storages")
+
+    def __str__(self):
+        return f"{self.name}"
 
     def serialize(self):
         return {
             "id": self.id,
-            "wishlist_name": self.name,
-            "user_id": self.user.id,
-            "items": self.items
+            "name": self.name,
+            "user_id": self.user.id
+        }
+
+
+class WishlistItem(models.Model):
+    wishlist = models.ForeignKey(Wishlist,
+                             on_delete=models.CASCADE,
+                             related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "product": self.product
         }
 
 
