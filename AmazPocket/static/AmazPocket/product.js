@@ -85,12 +85,23 @@ function add_products(content) {
 }
 
 function add_no_product_tag() {
-    const container = document.createElement("div");
-    container.className = "col-md-4";
     const hTag = document.createElement("h3");
     hTag.innerHTML = "There are no products";
-    container.append(hTag);
-    document.querySelector('#products-container').append(container);
+
+    let placeholder = document.querySelector("#sub-header-wishlist")
+    if (placeholder === undefined || placeholder === null) {
+        placeholder = document.querySelector('#products-container');
+        const container = document.createElement("div");
+        container.className = "col-md-4";
+
+        container.append(hTag);
+        placeholder.append(container);
+    } else {
+        const moveToCartButton = document.getElementById("move-wishlist-to-cart");
+        moveToCartButton.remove();
+        placeholder.classList.add("in-between");
+        placeholder.prepend(hTag);
+    }
 }
 
 
@@ -119,6 +130,8 @@ function onProductClick(product_id) {
             document.getElementById("id_price").innerHTML = `<strong>Price:</strong> $${data.form.price}`;
             document.getElementById("exampleModalLabel").innerHTML = data.form.name;
             document.getElementById("sell-by").innerHTML = `Sell by <strong>${data.form.vendor.vendor_name}</strong>`;
+
+            parentModel.dataset.productid = data.form.id;
 
             // Add wishlist items from layout to product modal
             populateModalWishlists(product_id, data.wishlists);
@@ -155,11 +168,6 @@ function populateModalWishlists(product_id, wishlists) {
 }
 
 function addProductToWishlist(wish_id, prod_id) {
-    const data = {
-        "wishlist_id": wish_id,
-        "product_id": prod_id
-    }
-
     const csrftoken = getCookie('csrftoken');
 
     fetch(`/add-to-wishlist/${wish_id}/${prod_id}/`, {
@@ -171,5 +179,35 @@ function addProductToWishlist(wish_id, prod_id) {
     .then(response => response.json())
     .then(data => {
         onProductClick(prod_id);
+    });
+}
+
+function deleteWishlist(wish_id) {
+    const csrftoken = getCookie('csrftoken');
+    fetch(`/wishlist/delete/${wish_id}/`, {
+        method: 'POST',
+        headers: {
+        'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        window.location.replace("/");
+    });
+}
+
+function removeFromWishlist(wishId) {
+    const modalWithProduct = document.getElementById("product-modal")
+    const productId = modalWithProduct.dataset.productid;
+    const csrftoken = getCookie('csrftoken');
+    fetch(`/remove-from-wishlist/${wishId}/${productId}/`, {
+        method: 'POST',
+        headers: {
+        'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        window.location.reload();
     });
 }

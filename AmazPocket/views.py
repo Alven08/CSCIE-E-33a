@@ -152,7 +152,7 @@ def product(request, product_id=None):
         product_item = Product.objects.get(pk=product_id)
 
         current_user_lists = Wishlist.objects.filter(user=request.user).all()
-        current_user_cart = Cart.objects.filter(user=request.user).all()
+        current_user_cart, __ = Cart.objects.get_or_create(user=request.user)
         lists = []
         for list in current_user_lists:
             list_ready = list.serialize()
@@ -240,7 +240,7 @@ def delete_wishlist(request, wishlist_id):
     # For some reason pycharm does not support delete in HTML
     if request.method == "POST":
         try:
-            to_be_deleted = get_object_or_404(Wishlist, id=wishlist_id, vendor=request.user)
+            to_be_deleted = get_object_or_404(Wishlist, id=wishlist_id, user=request.user)
             to_be_deleted.delete()
             return JsonResponse({ "success": True }, status=200)
         except Product.DoesNotExist:
@@ -255,7 +255,7 @@ def add_to_wishlist(request, wishlist_id, product_id):
         wishlist = get_object_or_404(Wishlist, id=wishlist_id)
 
         item, created = (WishlistItem.objects
-                         .get_or_create(Wishlist=wishlist, product=product))
+                         .get_or_create(wishlist=wishlist, product=product))
 
         return JsonResponse({ "success": True }, status=200)
 

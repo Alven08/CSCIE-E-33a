@@ -6,6 +6,15 @@
         <div class="col-md-12">
             <h2 class="m-t-1 display-2 border-bottom bold center-text">{{ title }}</h2>
         </div>
+
+        {% if wish_id %}
+            <div id="sub-header-wishlist">
+                <div>
+                    <button id="move-wishlist-to-cart" type="button" class="btn btn-outline-success my-2 my-sm-0 m-r-1" onclick="changeProductFormToPost()">Move Items to Cart</button>
+                    <button id="delete-wishlist" type="button" class="btn careful my-2 my-sm-0" onclick="deleteWishlist({{ wish_id }})">Delete Wishlist</button>
+                </div>
+            </div>
+        {% endif %}
     {% endif %}
 
     <div id="products-container"  data-cat-id="{{ cat_id }}" data-wish-id="{{ wish_id }}" class="row">
@@ -30,17 +39,21 @@
                   <p id="id_price" class="p-price"></p>
 
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Add to Cart</button>
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Add to Wishlist
-                      </button>
-                      <div id="product-modal-wishlist-menu" class="dropdown-menu">
-{#                        <a class="dropdown-item" href="#">Action</a>#}
-{#                        <a class="dropdown-item" href="#">Another action</a>#}
-{#                        <a class="dropdown-item" href="#">Something else here</a>#}
-                      </div>
-                    </div>
+                    <button type="button" class="btn btn-primary" {% if is_in_cart %}disabled{% endif %}>{{ is_in_cart|yesno:"Already in the cart,Add to Cart" }}</button>
+
+                      {% if wish_id %}
+                         <button id="remove-from-wishlist" type="button"
+                                 class="btn careful" onclick="removeFromWishlist({{ wish_id }})">Remove from Wishlist</button>
+                      {% else %}
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Add to Wishlist
+                          </button>
+                          <div id="product-modal-wishlist-menu" class="dropdown-menu">
+                            <!-- Wishlist names go here -->
+                          </div>
+                        </div>
+                      {% endif %}
                   </div>
               </div>
           </div>

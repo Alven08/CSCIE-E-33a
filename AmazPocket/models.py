@@ -120,7 +120,7 @@ class OrderItem(models.Model):
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
-    total = models.DecimalField(max_digits=9, decimal_places=2)
+    total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
     def serialize(self):
         return {
