@@ -20,9 +20,10 @@ class ProductForm(ModelForm):
             # For each field, the input element should
             # have the class form-control and it should have
             # a default placeholder
-            field.field.widget.attrs.update({
-                "class": "form-control",
-                "placeholder": f"Enter {field.label}"
-            })
+            if field.name != 'is_active':
+                field.field.widget.attrs.update({
+                    "class": "form-control",
+                    "placeholder": f"Enter {field.label}"
+                })
 
 

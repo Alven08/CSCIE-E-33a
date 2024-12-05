@@ -61,8 +61,8 @@ function add_products(content) {
 
     // A tag to open modal
     const aTag = document.createElement("a");
-    aTag.dataset.toggle = "modal";
-    aTag.dataset.target = "#exampleModal";
+    aTag.setAttribute("data-bs-toggle", "modal");
+    aTag.setAttribute("data-bs-target", "#exampleModal");
     aTag.addEventListener("click", () => onProductClick(content.id));
 
     // Label tag
@@ -141,11 +141,11 @@ function onProductClick(product_id) {
 
 function populateModalWishlists(product_id, wishlists) {
     const menu = document.getElementById("product-modal-wishlist-menu");
-    const wishlist_container = document.getElementById("product-modal-wishlist-menu");
-    Array.from(wishlist_container.children).forEach((item) => item.remove());
+    Array.from(menu.children).forEach((item) => item.remove());
 
     if (wishlists.length > 0) {
         wishlists.forEach((content) => {
+            const itemContainer = document.createElement("li");
             const button = document.createElement("button");
             button.type = "button";
             button.className = "dropdown-item wishlist-name-item-product";
@@ -156,7 +156,8 @@ function populateModalWishlists(product_id, wishlists) {
                 button.addEventListener("click", () => addProductToWishlist(content.id, product_id));
             }
 
-            menu.prepend(button);
+            itemContainer.append(button);
+            menu.prepend(itemContainer);
         });
     }
     else {

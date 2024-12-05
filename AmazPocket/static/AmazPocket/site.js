@@ -67,11 +67,13 @@ function addWishlishItems(list) {
     const menu = document.getElementById("wishlist-dropdown-menu");
     if (list.length > 0) {
         list.forEach((content) => {
+            const itemContainer = document.createElement("li");
             const item = document.createElement("a");
             item.className = "dropdown-item wishlist-name-item";
             item.innerHTML = content.name;
             item.href = `/wishlist/${content.id}`;
-            menu.prepend(item);
+            itemContainer.append(item);
+            menu.prepend(itemContainer);
         });
     }
     else {
