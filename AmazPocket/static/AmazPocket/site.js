@@ -38,7 +38,6 @@ function loadWishlists() {
 
 function createNewWishtList() {
     this.event.preventDefault();
-    // let form_data = JSON.stringify();
     let bla = new FormData(document.getElementById("create-wishlist-form"));
     fetch(`/wishlist`, {
         method: "POST",
@@ -90,3 +89,16 @@ function onWishlistModalClose() {
     const button_close = document.getElementById("button-wishlist-modal-close");
     button_close.click();
 }
+
+function getCart() {
+    fetch(`/cart`)
+    .then(response => response.json())
+    .then(data => {
+        addItemsToCartPanel(data.cart);
+    });
+}
+
+function addItemsToCartPanel(cartItems) {
+    // TODO
+}
+

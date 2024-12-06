@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
-from AmazPocket.models import User, Category, Product, Wishlist, WishlistItem, Cart
+from AmazPocket.models import User, Category, Product, Wishlist, WishlistItem, Cart, CartItem
 from AmazPocket.forms import ProductForm
 
 # Create your views here.
@@ -263,6 +263,25 @@ def add_to_wishlist(request, wishlist_id, product_id):
 def remove_from_wishlist(request, wishlist_id, product_id):
     if request.method == "POST":
         item = WishlistItem.objects.get(wishlist_id=wishlist_id, product_id=product_id)
-        item.delete()
+        item.delete();
+
+        return JsonResponse({ "success": True }, status=200)
+
+
+def cart(request):
+    if request.method == "GET":
+        current_cart, created = Cart.objects.get_or_create(user=request.user)
+        items = current_cart.items.all()
+        items_serialized = [item.serialize() for item in items]
+        return JsonResponse({"cart": items_serialized}, status=200)
+
+
+def add_to_cart(request, product_id):
+    if request.method == "POST":
+        current_cart, created = Cart.objects.get_or_create(user=request.user)
+        product = get_object_or_404(Product, id=product_id)
+
+        item, created = (CartItem.objects
+                         .get_or_create(cart=current_cart, product=product, quantity=1))
 
         return JsonResponse({ "success": True }, status=200)

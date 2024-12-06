@@ -133,6 +133,18 @@ function onProductClick(product_id) {
 
             parentModel.dataset.productid = data.form.id;
 
+            //Enable disable add to cart button
+            const addToCartButton = document.getElementById("add-to-cart-button");
+            if (data.is_in_cart) {
+                addToCartButton.disabled = true;
+                addToCartButton.innerHTML = "Product is Already in the Cart";
+            } else {
+                addToCartButton.disabled = false;
+                addToCartButton.innerHTML = "Add to Cart";
+            }
+
+            //is_in_cart
+
             // Add wishlist items from layout to product modal
             populateModalWishlists(product_id, data.wishlists);
         });
@@ -210,5 +222,22 @@ function removeFromWishlist(wishId) {
     .then(response => response.json())
     .then(data => {
         window.location.reload();
+    });
+}
+
+function addProductToCart() {
+    const modalWithProduct = document.getElementById("product-modal")
+    const productId = modalWithProduct.dataset.productid;
+    const csrftoken = getCookie('csrftoken');
+    fetch(`/add-to-cart/${productId}/`, {
+        method: 'POST',
+        headers: {
+        'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("product-modal-close-button").click();
+        document.getElementById("cart-link").click();
     });
 }

@@ -27,7 +27,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Add/Update Product</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button id="product-modal-close-button" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
               <div id="product-modal">
@@ -37,7 +37,11 @@
                   <p id="id_price" class="p-price"></p>
 
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" {% if is_in_cart %}disabled{% endif %}>{{ is_in_cart|yesno:"Already in the cart,Add to Cart" }}</button>
+                        {% if user.is_authenticated %}
+                            <button id="add-to-cart-button" type="button" onclick="addProductToCart()" class="btn btn-primary">Add to Cart</button>
+                        {% else %}
+                            <p>Create an account or log in to add product to cart</p>
+                        {% endif %}
 
                       {% if wish_id %}
                          <button id="remove-from-wishlist" type="button"

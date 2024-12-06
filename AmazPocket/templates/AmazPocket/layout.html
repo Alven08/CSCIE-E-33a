@@ -69,7 +69,7 @@
                         <span class="text-default">Hello </span><a class="nav-link inline" href="{% url 'profile' %}">{{ user.first_name }}! <span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a id="cart-link" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" class="nav-link" href="#">Cart</a>
+                        <a id="cart-link" onclick="getCart()" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" class="nav-link" href="#">Cart</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
@@ -97,7 +97,7 @@
                             <h5 id="offcanvasRightLabel">Cart</h5>
                             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                         </div>
-                        <div class="offcanvas-body">
+                        <div id="cart-body" class="offcanvas-body">
                             TODO
                         </div>
                     </div>
