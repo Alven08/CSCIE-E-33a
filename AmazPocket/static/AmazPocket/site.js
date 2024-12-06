@@ -94,11 +94,75 @@ function getCart() {
     fetch(`/cart`)
     .then(response => response.json())
     .then(data => {
-        addItemsToCartPanel(data.cart);
+        if (data.cart.length > 0) {
+            addItemsToCartPanel(data.cart);
+            document.getElementById("button-cart-checkout").disabled = false;
+        }
+        else {
+            document.getElementById("button-cart-checkout").disabled = true;
+        }
+
     });
 }
 
 function addItemsToCartPanel(cartItems) {
-    // TODO
+    cartItems.forEach(item => {
+        const cartContainer = document.getElementById("cart-product-container");
+
+        // Container of product information
+        const productContainer = document.createElement("div");
+        productContainer.className = "row m-b-1 border-bottom";
+        productContainer.dataset.id = item.id;
+
+        // Img container
+        const imgContainer = document.createElement("div");
+        imgContainer.className = "col-md-6";
+
+        // Img
+        const img = document.createElement("img");
+        img.className = "product-img";
+        img.src = item.product.img_url;
+        img.alt = item.product.name;
+
+        //Add img to product container
+        imgContainer.append(img);
+        productContainer.append(imgContainer);
+
+        // Name and Quantity container
+        const labelAndQuantityContainer = document.createElement("div");
+        labelAndQuantityContainer.className = "col-md-6";
+
+        // Label container
+        const labelContainer = document.createElement("div");
+        labelContainer.className = "col-md-12";
+
+        // Label
+        const label = document.createElement("label");
+        label.innerHTML = item.product.name;
+        label.className = "bold m-t-1";
+        labelContainer.append(label);
+        labelAndQuantityContainer.append(labelContainer);
+
+        // Quantity container
+        const quantityContainer = document.createElement("div");
+        labelContainer.className = "col-md-12";
+
+        // Quantity
+        const quantity = document.createElement("input");
+        quantity.type = "number";
+        quantity.min = "1";
+        quantity.min = "99";
+        quantity.className = "form-control";
+        quantityContainer.append(quantity);
+        labelAndQuantityContainer.append(quantityContainer);
+
+        // Adding label and quantity to product container
+        productContainer.append(labelAndQuantityContainer);
+
+        //Add product container to DOM
+        cartContainer.append(productContainer);
+    });
 }
+
+
 

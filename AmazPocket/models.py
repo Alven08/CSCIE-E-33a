@@ -141,7 +141,7 @@ class CartItem(models.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "product": self.product,
+            "product": self.product.serialize(),
             "quantity": self.quantity
         }
 
