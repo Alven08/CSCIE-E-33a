@@ -273,7 +273,9 @@ def cart(request):
         current_cart, created = Cart.objects.get_or_create(user=request.user)
         items = current_cart.items.all()
         items_serialized = [item.serialize() for item in items]
-        return JsonResponse({"cart": items_serialized}, status=200)
+        subtotal = current_cart.get_subtotal()
+        itemcount = current_cart.get_items_count()
+        return JsonResponse({"cart": items_serialized, "subtotal": subtotal, "itemcount": itemcount}, status=200)
 
 
 def add_to_cart(request, product_id):
@@ -283,5 +285,14 @@ def add_to_cart(request, product_id):
 
         item, created = (CartItem.objects
                          .get_or_create(cart=current_cart, product=product, quantity=1))
+
+        return JsonResponse({ "success": True }, status=200)
+
+
+def remove_from_cart(request, item_id):
+    if request.method == "POST":
+        current_cart = Cart.objects.get(user=request.user)
+        current_item = CartItem.objects.get(pk=item_id, cart=current_cart)
+        current_item.delete()
 
         return JsonResponse({ "success": True }, status=200)

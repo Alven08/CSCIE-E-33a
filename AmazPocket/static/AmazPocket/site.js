@@ -96,6 +96,7 @@ function getCart() {
     .then(data => {
         if (data.cart.length > 0) {
             addItemsToCartPanel(data.cart);
+            updateCartInformation(data.subtotal, data.itemcount);
             document.getElementById("button-cart-checkout").disabled = false;
         }
         else {
@@ -106,12 +107,19 @@ function getCart() {
 }
 
 function addItemsToCartPanel(cartItems) {
+    // Clean container
+    const cartContainer = document.getElementById("cart-product-container");
+    const cartChildren = Array.from(cartContainer.children);
+    if (cartChildren.length > 0) {
+        cartChildren.forEach(child => child.remove());
+    }
+
     cartItems.forEach(item => {
         const cartContainer = document.getElementById("cart-product-container");
 
         // Container of product information
         const productContainer = document.createElement("div");
-        productContainer.className = "row m-b-1 border-bottom";
+        productContainer.className = "row p-b-1 p-t-1 border-bottom";
         productContainer.dataset.id = item.id;
 
         // Img container
@@ -128,9 +136,9 @@ function addItemsToCartPanel(cartItems) {
         imgContainer.append(img);
         productContainer.append(imgContainer);
 
-        // Name and Quantity container
-        const labelAndQuantityContainer = document.createElement("div");
-        labelAndQuantityContainer.className = "col-md-6";
+        // Name, Quantity and options container
+        const labelAndQuantityAndOpsContainer = document.createElement("div");
+        labelAndQuantityAndOpsContainer.className = "col-md-6";
 
         // Label container
         const labelContainer = document.createElement("div");
@@ -141,7 +149,7 @@ function addItemsToCartPanel(cartItems) {
         label.innerHTML = item.product.name;
         label.className = "bold m-t-1";
         labelContainer.append(label);
-        labelAndQuantityContainer.append(labelContainer);
+        labelAndQuantityAndOpsContainer.append(labelContainer);
 
         // Quantity container
         const quantityContainer = document.createElement("div");
@@ -152,15 +160,64 @@ function addItemsToCartPanel(cartItems) {
         quantity.type = "number";
         quantity.min = "1";
         quantity.min = "99";
+        quantity.value = item.quantity;
         quantity.className = "form-control";
         quantityContainer.append(quantity);
-        labelAndQuantityContainer.append(quantityContainer);
+        labelAndQuantityAndOpsContainer.append(quantityContainer);
+
+         // Price container
+        const priceContainer = document.createElement("div");
+        priceContainer.className = "col-md-12";
+
+        // Price label
+        const priceLabel = document.createElement("label");
+        priceLabel.className = "bold m-t-1";
+        priceLabel.innerHTML = `$${item.product.price}`;
+
+        priceContainer.append(priceLabel);
+        labelAndQuantityAndOpsContainer.append(priceContainer);
+
+        // Button container
+        const buttonContainer = document.createElement("div");
+        buttonContainer.className = "col-md-12";
+
+        // Delete button
+        const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
+        deleteButton.className = "btn btn-primary careful btn-block m-t-1";
+        deleteButton.innerHTML = "Delete";
+        deleteButton.addEventListener("click", () => deleteItemFromCart(item.id));
+
+        buttonContainer.append(deleteButton);
+        labelAndQuantityAndOpsContainer.append(buttonContainer);
 
         // Adding label and quantity to product container
-        productContainer.append(labelAndQuantityContainer);
+        productContainer.append(labelAndQuantityAndOpsContainer);
 
         //Add product container to DOM
         cartContainer.append(productContainer);
+    });
+}
+
+function updateCartInformation(subtotal, count) {
+    const subTotalHeader = document.getElementById("cart-sub-total");
+    subTotalHeader.innerHTML = `Sub total: $${subtotal}`;
+
+    const itemCountHeader = document.getElementById("cart-item-count");
+    itemCountHeader.innerHTML = `Items: ${count}`;
+}
+
+function deleteItemFromCart(itemId)  {
+     const csrftoken = getCookie('csrftoken');
+    fetch(`/remove-from-cart/${itemId}/`, {
+        method: 'POST',
+        headers: {
+        'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        getCart();
     });
 }
 

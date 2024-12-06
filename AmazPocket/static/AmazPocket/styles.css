@@ -19,6 +19,14 @@
     margin-left: 1rem;
 }
 
+.p-t-1 {
+    padding-top: 0.5rem;
+}
+
+.p-b-1{
+    padding-bottom: 0.5rem;
+}
+
 .inline {
     display: inline-block;
 }
@@ -195,4 +203,8 @@
 /* Cart off canvas */
 #cart-product-container img {
     max-width: 100%;
+}
+
+#cart-sub-header {
+    justify-content: space-between;
 }

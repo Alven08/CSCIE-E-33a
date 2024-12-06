@@ -122,6 +122,14 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
     total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
+    def get_subtotal(self):
+        subtotal = sum([item.product.price for item in self.items.all()])
+        return subtotal
+
+    def get_items_count(self):
+        count = sum([item.quantity for item in self.items.all()])
+        return count
+
     def serialize(self):
         return {
             "id": self.id,
