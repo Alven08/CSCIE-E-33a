@@ -35,7 +35,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">AmazPocket</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
@@ -101,14 +101,10 @@
                             <h5 id="cart-item-count">Items: 0</h5>
                             <h5 id="cart-sub-total">Sub total: $0.00</h5>
                         </div>
+                        <div id="button-container" class="offcanvas-header">
+                            <button id="button-cart-checkout" type="button" class="btn btn-primary btn-block">Checkout</button>
+                        </div>
                         <div id="cart-body" class="offcanvas-body">
-
-                            <div class="button-container row">
-                                <div class="col-md-12">
-                                    <button id="button-cart-checkout" type="button" class="btn btn-primary btn-block">Checkout</button>
-                                </div>
-                            </div>
-
                             <div class="row">
                                 <div class="col-md-12" id="cart-product-container">
                                     <!-- Add cart products here -->
