@@ -1,3 +1,4 @@
+from decimal import Decimal
 from sqlite3 import IntegrityError
 
 from django.contrib.auth import authenticate, login, logout
@@ -5,8 +6,9 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
-from AmazPocket.models import User, Category, Product, Wishlist, WishlistItem, Cart, CartItem
-from AmazPocket.forms import ProductForm
+from AmazPocket.models import User, Category, Product, Wishlist, WishlistItem, Cart, CartItem, Order, OrderItem
+from AmazPocket.forms import ProductForm, OrderDetailForm
+
 
 # Create your views here.
 def index(request):
@@ -275,7 +277,10 @@ def cart(request):
         items_serialized = [item.serialize() for item in items]
         subtotal = current_cart.get_subtotal()
         itemcount = current_cart.get_items_count()
-        return JsonResponse({"cart": items_serialized, "subtotal": subtotal, "itemcount": itemcount}, status=200)
+        return JsonResponse({"cart": items_serialized,
+                             "subtotal": subtotal,
+                             "itemcount": itemcount},
+                            status=200)
 
 
 def add_to_cart(request, product_id):
@@ -309,3 +314,58 @@ def update_item_quantity(request, item_id, quantity):
             current_item.save()
 
         return JsonResponse({ "success": True }, status=200)
+
+
+def checkout(request):
+    tax = 0.07
+    if request.method == "GET":
+        current_cart, created = Cart.objects.get_or_create(user=request.user)
+        items = current_cart.items.all()
+        items_serialized = [item.serialize() for item in items]
+        subtotal = current_cart.get_subtotal()
+        item_count = current_cart.get_items_count()
+        form = OrderDetailForm()
+        total = round(subtotal + (subtotal * Decimal(tax)), 2)
+        return render(request, "AmazPocket/checkout.html", {
+            "cart": items_serialized,
+            "subtotal": subtotal,
+            "item_count": item_count,
+            "form": form,
+            "tax": tax,
+            "total": total
+        })
+    else:
+        order_details_form = OrderDetailForm(request.POST)
+        if order_details_form.is_valid():
+            current_cart = get_object_or_404(Cart, user=request.user)
+            items = current_cart.items.all()
+            total = current_cart.get_subtotal() + (current_cart.get_subtotal() * Decimal(tax))
+
+            # Create order
+            current_order = Order.objects.create(user=request.user,
+                                                 subtotal=current_cart.get_subtotal(),
+                                                 tax=tax,
+                                                 total=total)
+
+            # Create order details
+            new_order_details = order_details_form.save(commit=False)
+            new_order_details.order = current_order
+            new_order_details.save()
+
+            # Create order items
+            for item in items:
+                new_order_item = OrderItem.objects.create(order=current_order,
+                                                          product=item.product,
+                                                          quantity=item.quantity,
+                                                          price=item.product.price)
+
+            # Delete cart after it has been processed
+            current_cart.delete()
+            return render(request, "AmazPocket/order_confirmation.html", {
+                "order_id": current_order.id
+            })
+
+        else:
+            return JsonResponse({
+                "form": order_details_form
+            }, status=400)

@@ -50,7 +50,7 @@
                 {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Waitlist
+                            Wishlist
                         </a>
                         <ul id="wishlist-dropdown-menu" class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <li><hr class="dropdown-divider"></li>
@@ -59,7 +59,7 @@
                     </li>
                 {% endif %}
                 <form class="form-inline my-2 my-lg-0">
-                  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                  <input class="form-control mr-sm-2 m-l-1" type="search" placeholder="Search" aria-label="Search">
                   <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                 </form>
             </ul>
@@ -102,7 +102,7 @@
                             <h5 id="cart-sub-total">Sub total: $0.00</h5>
                         </div>
                         <div id="button-container" class="offcanvas-header">
-                            <button id="button-cart-checkout" type="button" class="btn btn-primary btn-block">Checkout</button>
+                            <a id="button-cart-checkout" href="{% url 'checkout' %} " class="btn btn-primary btn-block">Checkout</a>
                         </div>
                         <div id="cart-body" class="offcanvas-body">
                             <div class="row">

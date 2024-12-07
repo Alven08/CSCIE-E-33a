@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MinLengthValidator
 from django.db import models
 
 
@@ -99,6 +100,19 @@ class Order(models.Model):
             "order_date": self.created_date,
             "items": self.order_items
         }
+
+
+class OrderDetails(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="order_detail")
+    name = models.CharField(max_length=255, null=False, blank=False)
+    address = models.CharField(max_length=255, null=False, blank=False)
+    city = models.CharField(max_length=255, null=False, blank=False)
+    state = models.CharField(max_length=2, null=False, blank=False,
+                             validators=[MinLengthValidator(2)])
+    zipcode = models.CharField(max_length=5, null=False, blank=False,
+                               validators=[MinLengthValidator(5)])
+    credit_card = models.CharField(max_length=16, null=False, blank=False,
+                                   validators=[MinLengthValidator(15)])
 
 
 class OrderItem(models.Model):
