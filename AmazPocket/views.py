@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
-from AmazPocket.models import User, Category, Product, Wishlist, WishlistItem, Cart
+from AmazPocket.models import User, Category, Product, Wishlist, WishlistItem, Cart, CartItem
 from AmazPocket.forms import ProductForm
 
 # Create your views here.
@@ -263,6 +263,49 @@ def add_to_wishlist(request, wishlist_id, product_id):
 def remove_from_wishlist(request, wishlist_id, product_id):
     if request.method == "POST":
         item = WishlistItem.objects.get(wishlist_id=wishlist_id, product_id=product_id)
-        item.delete()
+        item.delete();
+
+        return JsonResponse({ "success": True }, status=200)
+
+
+def cart(request):
+    if request.method == "GET":
+        current_cart, created = Cart.objects.get_or_create(user=request.user)
+        items = current_cart.items.all()
+        items_serialized = [item.serialize() for item in items]
+        subtotal = current_cart.get_subtotal()
+        itemcount = current_cart.get_items_count()
+        return JsonResponse({"cart": items_serialized, "subtotal": subtotal, "itemcount": itemcount}, status=200)
+
+
+def add_to_cart(request, product_id):
+    if request.method == "POST":
+        current_cart, created = Cart.objects.get_or_create(user=request.user)
+        product = get_object_or_404(Product, id=product_id)
+
+        item, created = (CartItem.objects
+                         .get_or_create(cart=current_cart, product=product, quantity=1))
+
+        return JsonResponse({ "success": True }, status=200)
+
+
+def remove_from_cart(request, item_id):
+    if request.method == "POST":
+        current_cart = Cart.objects.get(user=request.user)
+        current_item = CartItem.objects.get(pk=item_id, cart=current_cart)
+        current_item.delete()
+
+        return JsonResponse({ "success": True }, status=200)
+
+
+def update_item_quantity(request, item_id, quantity):
+    if request.method == "POST":
+        current_cart = Cart.objects.get(user=request.user)
+        current_item = get_object_or_404(CartItem, pk=item_id, cart=current_cart)
+        if (quantity == 0):
+            current_item.delete()
+        else:
+            current_item.quantity = quantity
+            current_item.save()
 
         return JsonResponse({ "success": True }, status=200)

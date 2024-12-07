@@ -39,5 +39,3 @@ function onProductClick(product_id) {
             document.getElementById('id_is_active').checked = data.is_active;
         });
 }
-
-// document.addEventListener('DOMContentLoaded', function() {}

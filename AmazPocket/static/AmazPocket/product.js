@@ -61,8 +61,8 @@ function add_products(content) {
 
     // A tag to open modal
     const aTag = document.createElement("a");
-    aTag.dataset.toggle = "modal";
-    aTag.dataset.target = "#exampleModal";
+    aTag.setAttribute("data-bs-toggle", "modal");
+    aTag.setAttribute("data-bs-target", "#exampleModal");
     aTag.addEventListener("click", () => onProductClick(content.id));
 
     // Label tag
@@ -133,6 +133,18 @@ function onProductClick(product_id) {
 
             parentModel.dataset.productid = data.form.id;
 
+            //Enable disable add to cart button
+            const addToCartButton = document.getElementById("add-to-cart-button");
+            if (data.is_in_cart) {
+                addToCartButton.disabled = true;
+                addToCartButton.innerHTML = "Product is Already in the Cart";
+            } else {
+                addToCartButton.disabled = false;
+                addToCartButton.innerHTML = "Add to Cart";
+            }
+
+            //is_in_cart
+
             // Add wishlist items from layout to product modal
             populateModalWishlists(product_id, data.wishlists);
         });
@@ -141,11 +153,11 @@ function onProductClick(product_id) {
 
 function populateModalWishlists(product_id, wishlists) {
     const menu = document.getElementById("product-modal-wishlist-menu");
-    const wishlist_container = document.getElementById("product-modal-wishlist-menu");
-    Array.from(wishlist_container.children).forEach((item) => item.remove());
+    Array.from(menu.children).forEach((item) => item.remove());
 
     if (wishlists.length > 0) {
         wishlists.forEach((content) => {
+            const itemContainer = document.createElement("li");
             const button = document.createElement("button");
             button.type = "button";
             button.className = "dropdown-item wishlist-name-item-product";
@@ -156,7 +168,8 @@ function populateModalWishlists(product_id, wishlists) {
                 button.addEventListener("click", () => addProductToWishlist(content.id, product_id));
             }
 
-            menu.prepend(button);
+            itemContainer.append(button);
+            menu.prepend(itemContainer);
         });
     }
     else {
@@ -209,5 +222,22 @@ function removeFromWishlist(wishId) {
     .then(response => response.json())
     .then(data => {
         window.location.reload();
+    });
+}
+
+function addProductToCart() {
+    const modalWithProduct = document.getElementById("product-modal")
+    const productId = modalWithProduct.dataset.productid;
+    const csrftoken = getCookie('csrftoken');
+    fetch(`/add-to-cart/${productId}/`, {
+        method: 'POST',
+        headers: {
+        'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById("product-modal-close-button").click();
+        document.getElementById("cart-link").click();
     });
 }

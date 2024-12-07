@@ -27,9 +27,7 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Add/Update Product</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+            <button id="product-modal-close-button" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
               <div id="product-modal">
@@ -39,20 +37,25 @@
                   <p id="id_price" class="p-price"></p>
 
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" {% if is_in_cart %}disabled{% endif %}>{{ is_in_cart|yesno:"Already in the cart,Add to Cart" }}</button>
+                        {% if user.is_authenticated %}
+                            <button id="add-to-cart-button" type="button" onclick="addProductToCart()" class="btn btn-primary">Add to Cart</button>
+                        {% else %}
+                            <p>Create an account or log in to add product to cart</p>
+                        {% endif %}
 
                       {% if wish_id %}
                          <button id="remove-from-wishlist" type="button"
                                  class="btn careful" onclick="removeFromWishlist({{ wish_id }})">Remove from Wishlist</button>
                       {% else %}
                         <div class="btn-group">
-                          <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Add to Wishlist
-                          </button>
-                          <div id="product-modal-wishlist-menu" class="dropdown-menu">
-                            <!-- Wishlist names go here -->
-                          </div>
+                            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                Add to Wishlist
+                            </button>
+                            <ul id="product-modal-wishlist-menu" class="dropdown-menu">
+                                <!-- Add Items here -->
+                            </ul>
                         </div>
+
                       {% endif %}
                   </div>
               </div>
@@ -60,6 +63,7 @@
         </div>
       </div>
     </div>
+
 
 {% endblock %}
 
