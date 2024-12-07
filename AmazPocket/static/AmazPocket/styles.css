@@ -208,3 +208,18 @@
 #cart-sub-header {
     justify-content: space-between;
 }
+
+/* Checkout page */
+#checkout-items-container img {
+    max-width: 100%;
+}
+
+#checkout-items-container {
+    height: 70vh;
+    overflow-y: auto;
+}
+
+#order-cart-info {
+    display: flex;
+    justify-content: space-around;
+}

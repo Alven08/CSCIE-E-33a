@@ -102,7 +102,6 @@ function getCart() {
         else {
             document.getElementById("button-cart-checkout").disabled = true;
         }
-
     });
 }
 
@@ -219,6 +218,7 @@ function deleteItemFromCart(itemId)  {
     .then(response => response.json())
     .then(data => {
         getCart();
+        checkoutReload();
     });
 }
 
@@ -233,6 +233,14 @@ function cartItemQuantityChange(quantity, id) {
     .then(response => response.json())
     .then(data => {
         getCart();
+        checkoutReload();
     });
 }
 
+
+function checkoutReload() {
+    // reload if in checkout
+        const currentUrl = window.location.href;
+        if (currentUrl.includes("checkout"))
+            location.reload();
+}

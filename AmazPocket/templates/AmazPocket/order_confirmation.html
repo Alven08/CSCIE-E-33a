@@ -1,0 +1,14 @@
+{% extends "AmazPocket/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-12">
+                <h2 class="m-t-1 display-2 border-bottom bold">Order Confirmation</h2>
+                <h4>Your order has been successfully made.</h4>
+                <h4>Your order id is {{ order_id }}</h4>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends "AmazPocket/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-md-12">
+                <h2 class="m-t-1 display-2 border-bottom bold center-text">Checkout</h2>
+
+                <div class="row checkout-items">
+                    {% if cart|length > 0 %}
+                        <!-- Cart Details -->
+                        <div class="col-md-12 m-b-1" id="order-cart-info">
+                            <label><strong>Item count:</strong> {{ item_count }}</label>
+                            <label><strong>Subtotal:</strong> {{ subtotal }}</label>
+                            <label><strong>Tax:</strong> {{ tax }}</label>
+                            <label><strong>Total:</strong> {{ total }}</label>
+                        </div>
+
+                        <!-- Order details -->
+                        <div class="col-md-6">
+                            <form method="POST">
+                                {% csrf_token %}
+                                {{ form }}
+                                <button type="submit" class="btn btn-primary form-control m-t-1">Buy!</button>
+                            </form>
+                        </div>
+                    {% endif %}
+
+                    <!-- Order items -->
+                    <div class="col-md-6" id="checkout-items-container">
+                        <div class="row">
+                            {% for item in cart %}
+                                <div class="col-md-12">
+                                    <div class="row p-b-1 p-t-1 border-bottom">
+                                        <div class="col-md-4 offset-md-2">
+                                            <img class="product-img" src="{{ item.product.img_url }}" alt="{{ item.product.name }}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="col-md-12">
+                                                <label class="bold m-t-1">{{ item.product.name }}</label>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label class="m-t-1"><strong>Quantity:</strong> {{ item.quantity }}</label>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label class="m-t-1"><strong>Price:</strong> ${{ item.product.price }}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <h2 class="{% if cart|length > 0 %}center-text{% endif %}">No items in cart to check out</h2>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

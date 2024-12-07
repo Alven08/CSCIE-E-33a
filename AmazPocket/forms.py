@@ -1,5 +1,6 @@
-from .models import Product
+from .models import Product, OrderDetails
 from django.forms import ModelForm, Textarea
+
 
 class ProductForm(ModelForm):
     """
@@ -27,3 +28,19 @@ class ProductForm(ModelForm):
                 })
 
 
+class OrderDetailForm(ModelForm):
+    class Meta:
+        model = OrderDetails
+        fields = ['name', 'address', 'city', 'state', 'zipcode',
+                  'credit_card']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.visible_fields():
+            # For each field, the input element should
+            # have the class form-control and it should have
+            # a default placeholder
+            field.field.widget.attrs.update({
+                "class": "form-control",
+                "placeholder": f"Enter {field.label}"
+            })
