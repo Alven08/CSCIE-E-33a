@@ -296,3 +296,16 @@ def remove_from_cart(request, item_id):
         current_item.delete()
 
         return JsonResponse({ "success": True }, status=200)
+
+
+def update_item_quantity(request, item_id, quantity):
+    if request.method == "POST":
+        current_cart = Cart.objects.get(user=request.user)
+        current_item = get_object_or_404(CartItem, pk=item_id, cart=current_cart)
+        if (quantity == 0):
+            current_item.delete()
+        else:
+            current_item.quantity = quantity
+            current_item.save()
+
+        return JsonResponse({ "success": True }, status=200)

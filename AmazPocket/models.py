@@ -123,7 +123,7 @@ class Cart(models.Model):
     total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
     def get_subtotal(self):
-        subtotal = sum([item.product.price for item in self.items.all()])
+        subtotal = sum([item.product.price * item.quantity for item in self.items.all()])
         return subtotal
 
     def get_items_count(self):

@@ -96,7 +96,7 @@ function getCart() {
     .then(data => {
         if (data.cart.length > 0) {
             addItemsToCartPanel(data.cart);
-            updateCartInformation(data.subtotal, data.itemcount);
+            addCartInformation(data.subtotal, data.itemcount);
             document.getElementById("button-cart-checkout").disabled = false;
         }
         else {
@@ -159,9 +159,10 @@ function addItemsToCartPanel(cartItems) {
         const quantity = document.createElement("input");
         quantity.type = "number";
         quantity.min = "1";
-        quantity.min = "99";
+        quantity.max = "99";
         quantity.value = item.quantity;
         quantity.className = "form-control";
+        quantity.addEventListener("change", () => cartItemQuantityChange(quantity.value, item.id));
         quantityContainer.append(quantity);
         labelAndQuantityAndOpsContainer.append(quantityContainer);
 
@@ -199,7 +200,7 @@ function addItemsToCartPanel(cartItems) {
     });
 }
 
-function updateCartInformation(subtotal, count) {
+function addCartInformation(subtotal, count) {
     const subTotalHeader = document.getElementById("cart-sub-total");
     subTotalHeader.innerHTML = `Sub total: $${subtotal}`;
 
@@ -208,7 +209,7 @@ function updateCartInformation(subtotal, count) {
 }
 
 function deleteItemFromCart(itemId)  {
-     const csrftoken = getCookie('csrftoken');
+    const csrftoken = getCookie('csrftoken');
     fetch(`/remove-from-cart/${itemId}/`, {
         method: 'POST',
         headers: {
@@ -221,5 +222,17 @@ function deleteItemFromCart(itemId)  {
     });
 }
 
-
+function cartItemQuantityChange(quantity, id) {
+    const csrftoken = getCookie('csrftoken');
+    fetch(`/update-item-quantity/${id}/${quantity}`, {
+        method: 'POST',
+        headers: {
+        'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        getCart();
+    });
+}
 
