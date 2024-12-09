@@ -2,69 +2,75 @@
 {% load static %}
 
 {% block body %}
-    {% if profile.is_vendor %}
         <div class="col-md-12">
-            <h1 class="display-2 border-bottom bold">{{ profile.vendor_name }}</h1>
-            <div id="sub-header-vendor">
-                <h3>Your Products</h3>
-                <button id="addUpdateProductButton" type="button" class="btn btn-outline-success my-2 my-sm-0"
-                    data-bs-toggle="modal" data-bs-target="#exampleModal"
-                    onclick="changeProductFormToPost()">Add New Product</button>
-            </div>
+            {% if profile.is_vendor %}
+                <h1 class="display-6 border-bottom bold">Welcome to your vendor page, {{ profile.vendor_name }}!</h1>
+            {% else %}
+                <h1 class="display-6 border-bottom bold">Welcome to your profile page, {{ profile.first_name }} {{ profile.last_name }}!</h1>
+            {% endif %}
         </div>
 
-        <div id="vendor-products" class="row">
-            {% for item in products %}
-                <div class="col-md-4 product-space">
-                    <a href="#"  data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="onProductClick({{ item.id }})">
-                        <label class="bold">{{item.name}}</label>
-                        <p>{{item.description}}</p>
-                        <img class="product-img" src="{{item.img_url}}" alt="item.title">
-                        <p class="p-price"><strong>Price:</strong> ${{item.price}}</p>
-                        <p class="p-instock"><strong>In stock:</strong> {{ item.in_stock_quantity }}</p>
-                    </a>
-                    <!-- Delete form -->
-                    <!-- For some reason pycharm does not support delete in HTML -->
-                    <form id="product-delete" action="{% url 'delete_product' item.id %}" method="POST">
-                      {% csrf_token %}
-                      <button type="submit" class="btn btn-primary careful">Delete</button>
-                    </form>
+        <div class="col-md-12">
+            <div class="container">
+                <ul class="nav nav-tabs m-t-2">
+                    <li class="nav-item">
+                        <button id="showYourOrders" class="nav-link active" aria-current="page"
+                        onclick="showYourOrders()"><strong>Orders</strong></button>
+                    </li>
+                    {% if profile.is_vendor %}
+                        <li class="nav-item">
+                             <button id="showYourProducts" type="button" class="nav-link"
+                             onclick="showYourProducts()"><strong>Your Products</strong></button>
+                        </li>
+                    {% endif %}
+                </ul>
+
+                <div id="profile-orders-container" class="row">
+                    <!-- add orders here -->
                 </div>
-            {% empty %}
-                <h4>You have not products yet.</h4>
-            {% endfor %}
-        </div>
 
-        <!-- Modal for add/update -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Add/Update Product</h5>
-                  <button type="button" class="btn-close" onclick="closeForm()" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <form id="product-form" method="POST" action="{% url 'product' %}">
-                      {% csrf_token %}
-                      {{form}}
-                      <div class="modal-footer">
-                        <button onclick="closeForm()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save New Product</button>
+                {% if profile.is_vendor %}
+                    <div id="profile-products" class="row" style="display:none">
+                        <div id="sub-header-profile">
+                            <button id="addUpdateProductButton" type="button" class="btn btn-outline-success my-2 my-sm-0"
+                                data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                onclick="changeProductFormToPost()">Add New Product</button>
+                        </div>
+
+                        <!-- Your products here -->
+                    </div>
+
+
+                    <!-- Modal for add/update -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                              <h5 class="modal-title" id="exampleModalLabel">Add/Update Product</h5>
+                              <button type="button" class="btn-close" onclick="closeForm()" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                              <form id="product-form" method="POST" action="{% url 'product' %}">
+                                  {% csrf_token %}
+                                  {{form}}
+                                  <div class="modal-footer">
+                                    <button onclick="closeForm()" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save New Product</button>
+                                  </div>
+                              </form>
+                          </div>
+                        </div>
                       </div>
-                  </form>
-              </div>
+                    </div>
+
+
+                {% endif %}
             </div>
-          </div>
         </div>
 
-    {% else %}
-        <div class="col-md-12">
-            <h1 class="border-bottom">Welcome to your profile page, {{ profile.first_name }} {{ profile.last_name }}!</h1>
-        </div>
-    {% endif %}
 {% endblock %}
 
 {% block script %}
-    <script type="text/babel" src="{% static 'AmazPocket/profile.js' %}"></script>
+    <script src="{% static 'AmazPocket/profile.js' %}"></script>
 {% endblock %}
 

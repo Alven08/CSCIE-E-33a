@@ -91,6 +91,12 @@ class Order(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     def serialize(self):
+        total_items = 0
+        items = []
+        for item in self.order_items.all():
+            items.append(item.serialize())
+            total_items += item.quantity
+
         return {
             "id": self.id,
             "user_id": self.user.id,
@@ -98,7 +104,9 @@ class Order(models.Model):
             "tax": self.tax,
             "total": self.total,
             "order_date": self.created_date,
-            "items": self.order_items
+            "items": items,
+            "order_detail": self.order_detail.first().serialize(),
+            "total_items": total_items
         }
 
 
@@ -114,6 +122,16 @@ class OrderDetails(models.Model):
     credit_card = models.CharField(max_length=16, null=False, blank=False,
                                    validators=[MinLengthValidator(15)])
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "address": self.address,
+            "city": self.city,
+            "state": self.state,
+            "zipcode": self.zipcode
+        }
+
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="order_items")
@@ -127,8 +145,8 @@ class OrderItem(models.Model):
             "order_id": self.order.id,
             "total": self.quantity * self.price,
             "quantity": self.quantity,
-            "individual_order_price": self.price,
-            "product": self.product
+            "individual_item_price": self.price,
+            "product": self.product.serialize()
         }
 
 

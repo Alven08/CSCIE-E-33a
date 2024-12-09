@@ -40,6 +40,22 @@ def load_products(request):
     })
 
 
+def load_vendor_products(request):
+    # Get start and end points
+    start = int(request.GET.get("start") or 0)
+    end = int(request.GET.get("end") or (start + 9))
+
+    all_products = (Product.objects.filter(vendor=request.user,
+                                          is_active=True,
+                                          in_stock_quantity__gt=0)
+                    .order_by("-created_date").all())
+    products = [single_product.serialize() for single_product in all_products[start:end]]
+
+    return JsonResponse({
+        "products": products
+    })
+
+
 def login_view(request):
     if request.method == 'POST':
 
@@ -103,19 +119,16 @@ def profile(request):
 
     user = User.objects.get(pk=request.user.id)
     title = "Vendor page" if user.is_vendor else "Profile"
-    products = None
+    # products = None
     orders = None
     new_product_form = None
     if user.is_vendor:
-        products = [product.serialize() for product in user.products.order_by("-created_date").all()]
         new_product_form = ProductForm()
-    else:
-        orders = [order.serialize() for order in user.orders.all()]
 
     return render(request, "AmazPocket/profile.html", {
         "profile": user.serialize(),
         "title": title,
-        "products": products,
+        # "products": products,
         "orders": orders,
         "form": new_product_form
     })
@@ -369,3 +382,17 @@ def checkout(request):
             return JsonResponse({
                 "form": order_details_form
             }, status=400)
+
+
+def load_orders(request):
+    if request.method == "GET":
+        # Get start and end points
+        start = int(request.GET.get("start") or 0)
+        end = int(request.GET.get("end") or (start + 9))
+
+        all_orders = Order.objects.filter(user=request.user).order_by("-created_date").all()
+        orders = [order.serialize() for order in all_orders[start:end]]
+
+        return JsonResponse({
+            "orders": orders
+        })
