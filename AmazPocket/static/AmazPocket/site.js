@@ -94,14 +94,9 @@ function getCart() {
     fetch(`/cart`)
     .then(response => response.json())
     .then(data => {
-        if (data.cart.length > 0) {
-            addItemsToCartPanel(data.cart);
-            addCartInformation(data.subtotal, data.itemcount);
-            document.getElementById("button-cart-checkout").disabled = false;
-        }
-        else {
-            document.getElementById("button-cart-checkout").disabled = true;
-        }
+        addItemsToCartPanel(data.cart);
+        addCartInformation(data.subtotal, data.itemcount);
+        document.getElementById("button-cart-checkout").disabled = data.cart.length == 0;
     });
 }
 
