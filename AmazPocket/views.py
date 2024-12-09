@@ -396,3 +396,12 @@ def load_orders(request):
         return JsonResponse({
             "orders": orders
         })
+
+
+def search(request):
+    if request.method == "GET":
+        criteria = request.GET.get("criteria")
+        return render(request, "AmazPocket/index.html", {
+                "title": "Search by: %s" % criteria,
+                "criteria": criteria
+            })
