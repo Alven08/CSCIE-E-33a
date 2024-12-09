@@ -4,10 +4,67 @@ let counter = 0;
 // Load posts 10 at a time
 const quantity = 9;
 
-let endOfOrders = false;
+let endOfData = false;
+
+let loadOrdersFlag = true;
+
+const ORDER_TAB = "order";
+const PRODUCT_TAB = "product";
 
 
+document.addEventListener("DOMContentLoaded", loadOrders);
+
+window.onscroll = () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+        if (loadOrdersFlag)
+            loadOrders();
+        else
+            loadProducts();
+    }
+};
+
+function resetLoadParameters() {
+    counter = 0;
+    endOfData = false;
+}
+
+function changeActiveTab(tab) {
+    const productTab = document.getElementById("showYourProducts");
+    const orderTab = document.getElementById("showYourOrders");
+
+    if (tab == ORDER_TAB) {
+        orderTab.className = "nav-link active";
+
+        if (productTab != null)
+            productTab.className = "nav-link";
+
+    } else {
+        orderTab.className = "nav-link";
+
+        if (productTab != null)
+            productTab.className = "nav-link active";
+    }
+}
+
+
+//////////////////////////////////////////////
 // Vendor profile
+//////////////////////////////////////////////
+
+function showYourProducts() {
+    const productsContainer = document.getElementById("profile-products");
+    productsContainer.style.display = "flex";
+
+    const ordersContainer = document.getElementById("profile-orders-container");
+    ordersContainer.style.display = "none";
+
+    resetLoadParameters();
+    changeActiveTab(PRODUCT_TAB);
+    loadOrdersFlag = false;
+
+    resetProductSpace();
+    loadProducts();
+}
 
 function changeProductFormToPost() {
     let product_form = document.querySelector('#product-form');
@@ -51,20 +108,100 @@ function onProductClick(product_id) {
         });
 }
 
+function loadProducts() {
+    // Checking if we reached the end of products
+    if (endOfData)
+        return;
+
+    // Set start and end post numbers, and update counter
+    const start = counter;
+    const end = start + quantity;
+    counter = end;
+
+    // Get new posts and add posts
+    fetch(`/load-vendor-products?start=${start}&end=${end}`)
+    .then(response => response.json())
+    .then(data => {
+        if (data.products.length > 0)
+            data.products.forEach(add_products);
+        else {
+            if (start === 0)
+                add_no_product_tag();
+
+            endOfData = true;
+        }
+    });
+}
+
+function resetProductSpace() {
+    const allDisplayingProducts = document.getElementsByClassName("col-md-4 product-space");
+    const arrayOfProducts = Array.from(allDisplayingProducts);
+    arrayOfProducts.forEach(product => product.remove());
+}
+
+// Add a new product with given contents to DOM
+function add_products(content) {
+
+    // Create new product
+    // boostrap div
+    const container = document.createElement("div");
+    container.className = "col-md-4 product-space";
+
+    // A tag to open modal
+    const aTag = document.createElement("a");
+    aTag.setAttribute("data-bs-toggle", "modal");
+    aTag.setAttribute("data-bs-target", "#exampleModal");
+    aTag.addEventListener("click", () => onProductClick(content.id));
+
+    // Label tag
+    const label = document.createElement("label");
+    label.className = "bold";
+    label.innerHTML = content.name;
+    aTag.append(label);
+
+    //Img tag
+    const img = document.createElement("img");
+    img.className = "product-img";
+    img.src = content.img_url;
+    img.alt = content.name;
+    aTag.append(img);
+
+    container.append(aTag);
+
+    // Add product to DOM
+    document.querySelector('#profile-products').append(container);
+}
+
+function add_no_product_tag() {
+    const hTag = document.createElement("h3");
+    hTag.innerHTML = "There are no products";
+    document.querySelector('#profile-products').append(hTag);
+}
+
+
+//////////////////////////////////////////////
 // User Profile
+//////////////////////////////////////////////
 
-document.addEventListener("DOMContentLoaded", loadOrders);
+function showYourOrders() {
+    const productsContainer = document.getElementById("profile-products");
+    if (productsContainer != null)
+        productsContainer.style.display = "none";
 
-window.onscroll = () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-        loadOrders();
-    }
-};
+    const ordersContainer = document.getElementById("profile-orders-container");
+    ordersContainer.style.display = "flex";
 
+    changeActiveTab(ORDER_TAB);
+    resetLoadParameters();
+    loadOrdersFlag = true;
+
+    resetOrderSpace();
+    loadOrders();
+}
 
 function loadOrders() {
     // Checking if we reached the end of products
-    if (endOfOrders)
+    if (endOfData)
         return;
 
     // Set start and end post numbers, and update counter
@@ -82,9 +219,15 @@ function loadOrders() {
             if (start === 0)
                 addNoProductTag();
 
-            endOfOrders = true;
+            endOfData = true;
         }
     });
+}
+
+function resetOrderSpace() {
+    const accordion = document.getElementById("accordionExample");
+    if (accordion != null)
+        accordion.remove();
 }
 
 // Add the order with given contents to DOM
@@ -248,3 +391,4 @@ function addNoProductTag() {
     noProductTag.innerHTML = "You have not orders yet.";
     container.append(noProductTag);
 }
+

@@ -32,5 +32,6 @@ urlpatterns = [
 
     path("checkout", views.checkout, name="checkout"),
 
-    path("load-orders", views.load_orders, name="load_orders")
+    path("load-orders", views.load_orders, name="load_orders"),
+    path("load-vendor-products", views.load_vendor_products, name="load_vendor_products"),
 ]

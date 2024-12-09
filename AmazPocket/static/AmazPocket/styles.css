@@ -3,6 +3,10 @@
     margin-top: 0.5rem;
 }
 
+.m-t-2 {
+    margin-top: 1rem;
+}
+
 .m-b-1{
     margin-bottom: 0.5rem;
 }
@@ -224,6 +228,17 @@
     justify-content: space-around;
 }
 
+/* Profile page */
+.nav.nav-tabs .nav-item .nav-link {
+    color: white;
+    background-color: #28a745;
+}
+
+.nav.nav-tabs .nav-item .nav-link.active {
+    color: black;
+    background-color: white;
+}
+
 /* Profile order page */
 .accordion-body img {
     max-width: 100%;
@@ -242,5 +257,3 @@
 .accordion-button.order.collapsed {
     background-color: white;
 }
-
-/*#*/
