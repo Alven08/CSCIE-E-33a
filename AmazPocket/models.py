@@ -12,6 +12,11 @@ class User(AbstractUser):
         all = self.storages.all()
         return [{"id": list.id, "name": list.name} for list in all]
 
+    def __str__(self):
+        return f"ID: {self.id} - {self.vendor_name}" \
+            if self.vendor_name is not None \
+            else f"ID: {self.id} - {self.first_name} {self.last_name}"
+
     def serialize(self):
         return {
             "id": self.id,
@@ -67,7 +72,7 @@ class Product(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.name}"
+        return f"ID: {self.id} - Name: {self.name}"
 
     def serialize(self):
         return {
@@ -89,6 +94,9 @@ class Order(models.Model):
     tax = models.DecimalField(max_digits=9, decimal_places=2)
     total = models.DecimalField(max_digits=9, decimal_places=2)
     created_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.id}"
 
     def serialize(self):
         total_items = 0
@@ -121,6 +129,15 @@ class OrderDetails(models.Model):
                                validators=[MinLengthValidator(5)])
     credit_card = models.CharField(max_length=16, null=False, blank=False,
                                    validators=[MinLengthValidator(15)])
+
+    class Meta:
+        # verbose name and verbose name plural for the admin
+        # page to display the label properly
+        verbose_name = ("Order Details")
+        verbose_name_plural = ("Orders Details")
+
+    def __str__(self):
+        return f"{self.id}"
 
     def serialize(self):
         return {
@@ -212,22 +229,3 @@ class WishlistItem(models.Model):
             "id": self.id,
             "product": self.product
         }
-
-
-class Comment(models.Model):
-    """
-    Comment model representing a comment made to a product item.
-    created_date is auto fill in with current date and time.
-    """
-    comment = models.TextField(max_length=500)
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name="comments"
-        )
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE,
-        related_name="comments"
-        )
-    created_date = models.DateTimeField(auto_now_add=True)
