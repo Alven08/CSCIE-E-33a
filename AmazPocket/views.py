@@ -109,8 +109,8 @@ def profile(request):
     if user.is_vendor:
         products = [product.serialize() for product in user.products.order_by("-created_date").all()]
         new_product_form = ProductForm()
-    else:
-        orders = [order.serialize() for order in user.orders.all()]
+    # else:
+    #     orders = [order.serialize() for order in user.orders.all()]
 
     return render(request, "AmazPocket/profile.html", {
         "profile": user.serialize(),
@@ -369,3 +369,17 @@ def checkout(request):
             return JsonResponse({
                 "form": order_details_form
             }, status=400)
+
+
+def load_orders(request):
+    if request.method == "GET":
+        # Get start and end points
+        start = int(request.GET.get("start") or 0)
+        end = int(request.GET.get("end") or (start + 9))
+
+        all_orders = Order.objects.filter(user=request.user).order_by("-created_date").all()
+        orders = [order.serialize() for order in all_orders[start:end]]
+
+        return JsonResponse({
+            "orders": orders
+        })

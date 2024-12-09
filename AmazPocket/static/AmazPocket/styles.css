@@ -90,20 +90,20 @@
     text-align: right;
 }
 
-#vendor-products .product-img {
+#profile-products .product-img {
     width: 100%;
     height: 400px;
 }
 
-#vendor-products a {
+#profile-products a {
     color: black;
 }
 
-#vendor-products .product-space:hover {
+#profile-products .product-space:hover {
     background-color: #bee4c7;
 }
 
-#vendor-products a:hover {
+#profile-products a:hover {
     text-decoration: none;
     color: black;
 }
@@ -122,7 +122,7 @@
     padding-top: 1rem;
 }
 
-#sub-header-vendor {
+#sub-header-profile {
     display: flex;
     justify-content: space-between;
     margin-top: 1rem;
@@ -223,3 +223,24 @@
     display: flex;
     justify-content: space-around;
 }
+
+/* Profile order page */
+.accordion-body img {
+    max-width: 100%;
+}
+
+.accordion-button.order {
+    background-color: #d1e7dd;
+    font-weight: bold;
+    color: black;
+}
+
+.accordion-button.order:focus {
+    box-shadow: 0 0 0.5rem #9fcdb8;
+}
+
+.accordion-button.order.collapsed {
+    background-color: white;
+}
+
+/*#*/

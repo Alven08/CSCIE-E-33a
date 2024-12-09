@@ -1,7 +1,7 @@
 // Start with first post
 let counter = 0;
 
-// Load posts 20 at a time
+// Load posts 10 at a time
 const quantity = 9;
 
 let endOfProducts = false;
