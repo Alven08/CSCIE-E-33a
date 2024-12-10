@@ -21,6 +21,7 @@ def load_products(request):
     end = int(request.GET.get("end") or (start + 9))
     cat_id = int(request.GET.get("cat-id") or -1)
     wish_id = int(request.GET.get("wish-id") or -1)
+    search_criteria = request.GET.get("criteria")
 
     if cat_id != -1:
         category = Category.objects.get(pk=cat_id)
@@ -31,6 +32,12 @@ def load_products(request):
         wishlist = Wishlist.objects.get(pk=wish_id, user=request.user)
         wish_products = wishlist.items.all()
         products = [product.product.serialize() for product in wish_products[start:end]]
+    elif search_criteria:
+        search_products = (Product.objects.filter(is_active=True,
+                                              in_stock_quantity__gt=0,
+                                              name__contains=search_criteria)
+                        .order_by("-created_date").all())
+        products = [product.serialize() for product in search_products[start:end]]
     else:
         all_products = Product.objects.filter(is_active=True, in_stock_quantity__gt=0).order_by("-created_date").all()
         products = [product.serialize() for product in all_products[start:end]]

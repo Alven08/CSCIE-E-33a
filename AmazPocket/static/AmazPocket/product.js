@@ -8,6 +8,7 @@ let endOfProducts = false;
 let listTypeSetup = false;
 let productCatId = null;
 let productWishId = null;
+let searchCriteria = null;
 
 document.addEventListener("DOMContentLoaded", loadProducts);
 
@@ -28,6 +29,7 @@ function loadProducts() {
         let productsContainer = document.getElementById("products-container")
         productCatId = Number(productsContainer.dataset.catId == "" ? -1 : productsContainer.dataset.catId);
         productWishId = Number(productsContainer.dataset.wishId == "" ? -1 : productsContainer.dataset.wishId);
+        searchCriteria = productsContainer.dataset.searchCriteria == "" ? "" : productsContainer.dataset.searchCriteria;
         listTypeSetup = true;
     }
 
@@ -37,7 +39,7 @@ function loadProducts() {
     counter = end;
 
     // Get new posts and add posts
-    fetch(`/load-products?start=${start}&end=${end}&cat-id=${productCatId}&wish-id=${productWishId}`)
+    fetch(`/load-products?start=${start}&end=${end}&cat-id=${productCatId}&wish-id=${productWishId}&criteria=${searchCriteria}`)
     .then(response => response.json())
     .then(data => {
         if (data.products.length > 0)
