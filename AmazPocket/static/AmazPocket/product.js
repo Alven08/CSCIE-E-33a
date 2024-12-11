@@ -99,8 +99,6 @@ function add_no_product_tag() {
         container.append(hTag);
         placeholder.append(container);
     } else {
-        const moveToCartButton = document.getElementById("move-wishlist-to-cart");
-        moveToCartButton.remove();
         placeholder.classList.add("in-between");
         placeholder.prepend(hTag);
     }
@@ -137,15 +135,15 @@ function onProductClick(product_id) {
 
             //Enable disable add to cart button
             const addToCartButton = document.getElementById("add-to-cart-button");
-            if (data.is_in_cart) {
-                addToCartButton.disabled = true;
-                addToCartButton.innerHTML = "Product is Already in the Cart";
-            } else {
-                addToCartButton.disabled = false;
-                addToCartButton.innerHTML = "Add to Cart";
+            if (addToCartButton != null) {
+                if (data.is_in_cart) {
+                    addToCartButton.disabled = true;
+                    addToCartButton.innerHTML = "Product is Already in the Cart";
+                } else {
+                    addToCartButton.disabled = false;
+                    addToCartButton.innerHTML = "Add to Cart";
+                }
             }
-
-            //is_in_cart
 
             // Add wishlist items from layout to product modal
             populateModalWishlists(product_id, data.wishlists);
@@ -155,6 +153,10 @@ function onProductClick(product_id) {
 
 function populateModalWishlists(product_id, wishlists) {
     const menu = document.getElementById("product-modal-wishlist-menu");
+
+    if (menu == null)
+        return;
+
     Array.from(menu.children).forEach((item) => item.remove());
 
     if (wishlists.length > 0) {

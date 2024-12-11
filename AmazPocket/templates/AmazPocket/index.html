@@ -40,24 +40,26 @@
                   <div class="modal-footer">
                         {% if user.is_authenticated %}
                             <button id="add-to-cart-button" type="button" onclick="addProductToCart()" class="btn btn-primary">Add to Cart</button>
+
+                            {% if wish_id %}
+                                <button id="remove-from-wishlist" type="button"
+                                    class="btn careful" onclick="removeFromWishlist({{ wish_id }})">Remove from Wishlist</button>
+                            {% else %}
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Add to Wishlist
+                                    </button>
+                                    <ul id="product-modal-wishlist-menu" class="dropdown-menu">
+                                        <!-- Add Items here -->
+                                    </ul>
+                                </div>
+                            {% endif %}
+
                         {% else %}
-                            <p>Create an account or log in to add product to cart</p>
+                            <p>Create an account or log in to add product to the cart or wishlist.</p>
                         {% endif %}
 
-                      {% if wish_id %}
-                         <button id="remove-from-wishlist" type="button"
-                                 class="btn careful" onclick="removeFromWishlist({{ wish_id }})">Remove from Wishlist</button>
-                      {% else %}
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                Add to Wishlist
-                            </button>
-                            <ul id="product-modal-wishlist-menu" class="dropdown-menu">
-                                <!-- Add Items here -->
-                            </ul>
-                        </div>
 
-                      {% endif %}
                   </div>
               </div>
           </div>
