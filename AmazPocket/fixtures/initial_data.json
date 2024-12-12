@@ -84,5 +84,159 @@
       "vendor": 1,
       "created_date": "2024-11-28 18:30"
     }
+  },
+  {
+    "model": "AmazPocket.Product",
+    "pk": 3,
+    "fields": {
+      "name": "Nikke Quest 6",
+      "description": "Nike Shoes for running",
+      "category": 3,
+      "img_url": "https://static.nike.com/a/images/t_default/fccd237c-9033-4066-900b-643a0e3f830d/NIKE+QUEST+6.png",
+      "price": 250.00,
+      "in_stock_quantity": 10,
+      "vendor": 1,
+      "created_date": "2024-11-28 18:30"
+    }
+  },
+  {
+    "model": "AmazPocket.Product",
+    "pk": 4,
+    "fields": {
+      "name": "Men's Shoes",
+      "description": "Nike Shoes for running",
+      "category": 3,
+      "img_url": "https://m.media-amazon.com/images/I/816aurldstL._AC_SX500_.jpg",
+      "price": 30.00,
+      "in_stock_quantity": 10,
+      "vendor": 1,
+      "created_date": "2024-11-28 18:30"
+    }
+  },
+  {
+    "model": "AmazPocket.Product",
+    "pk": 5,
+    "fields": {
+      "name": "Buzz Lightyear",
+      "description": "Disney Toy for kids all ages",
+      "category": 1,
+      "img_url": "https://m.media-amazon.com/images/I/71rL5zB1UZL.__AC_SX300_SY300_QL70_FMwebp_.jpg",
+      "price": 50.00,
+      "in_stock_quantity": 10,
+      "vendor": 1,
+      "created_date": "2024-11-28 18:30"
+    }
+  },
+  {
+    "model": "AmazPocket.Product",
+    "pk": 6,
+    "fields": {
+      "name": "Women's Jacket",
+      "description": "Puffer Jacket",
+      "category": 2,
+      "img_url": "https://m.media-amazon.com/images/I/81y3YC4vFlL._AC_SX425_.jpg",
+      "price": 75.00,
+      "in_stock_quantity": 10,
+      "vendor": 1,
+      "created_date": "2024-11-28 18:30"
+    }
+  },
+  {
+    "model": "AmazPocket.Product",
+    "pk": 7,
+    "fields": {
+      "name": "T-Shirt",
+      "description": "White T-Shirt",
+      "category": 2,
+      "img_url": "https://m.media-amazon.com/images/I/61+9aKOdUuL._AC_SX342_.jpg",
+      "price": 10.00,
+      "in_stock_quantity": 10,
+      "vendor": 1,
+      "created_date": "2024-11-28 18:30"
+    }
+  },
+  {
+    "model": "AmazPocket.Product",
+    "pk": 8,
+    "fields": {
+      "name": "Blue T-Shirt",
+      "description": "Blue T-Shirt",
+      "category": 2,
+      "img_url": "https://m.media-amazon.com/images/I/618pDpU4jrL._AC_SX342_.jpg",
+      "price": 10.00,
+      "in_stock_quantity": 10,
+      "vendor": 1,
+      "created_date": "2024-11-28 18:30"
+    }
+  },
+  {
+    "model": "AmazPocket.Product",
+    "pk": 9,
+    "fields": {
+      "name": "Grey T-Shirt",
+      "description": "Grey T-Shirt",
+      "category": 2,
+      "img_url": "https://m.media-amazon.com/images/I/71lsvnLSn6L._AC_SX342_.jpg",
+      "price": 10.00,
+      "in_stock_quantity": 10,
+      "vendor": 1,
+      "created_date": "2024-11-28 18:30"
+    }
+  },
+  {
+    "model": "AmazPocket.Product",
+    "pk": 10,
+    "fields": {
+      "name": "Brown T-Shirt",
+      "description": "Brown T-Shirt",
+      "category": 2,
+      "img_url": "https://m.media-amazon.com/images/I/71ImrMyGytL._AC_SX342_.jpg",
+      "price": 10.00,
+      "in_stock_quantity": 10,
+      "vendor": 1,
+      "created_date": "2024-11-28 18:30"
+    }
+  },
+  {
+    "model": "AmazPocket.Product",
+    "pk": 11,
+    "fields": {
+      "name": "Unisex Shoes",
+      "description": "Black and White Shoes",
+      "category": 3,
+      "img_url": "https://m.media-amazon.com/images/I/7195qlRvMSL._AC_SX500_.jpg",
+      "price": 55.00,
+      "in_stock_quantity": 10,
+      "vendor": 1,
+      "created_date": "2024-11-28 18:30"
+    }
+  },
+  {
+    "model": "AmazPocket.Product",
+    "pk": 12,
+    "fields": {
+      "name": "Unisex Shoes Pink",
+      "description": "White and Pink Shoes",
+      "category": 3,
+      "img_url": "https://m.media-amazon.com/images/I/71g9xb0DDkL._AC_SX500_.jpg",
+      "price": 55.00,
+      "in_stock_quantity": 10,
+      "vendor": 1,
+      "created_date": "2024-11-28 18:30"
+    }
+  },
+  {
+    "model": "AmazPocket.Product",
+    "pk": 13,
+    "fields": {
+      "name": "Uno Game",
+      "description": "Uno Card Game Family Night",
+      "category": 3,
+      "img_url": "https://m.media-amazon.com/images/I/813J6ld2EJL.__AC_SX300_SY300_QL70_FMwebp_.jpg",
+      "price": 55.00,
+      "in_stock_quantity": 10,
+      "vendor": 1,
+      "created_date": "2024-11-28 18:30"
+    }
   }
 ]
