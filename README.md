@@ -18,3 +18,4 @@ To run the application run:
 1. python manage.py makemigrations AmazPocket
 2. python manage.py migrate
 3. Load the fixtures: python manage.py loaddata AmazPocket/fixtures/initial_data.json
+4. python manage.py runserver
