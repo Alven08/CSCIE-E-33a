@@ -231,7 +231,7 @@
     "fields": {
       "name": "Uno Game",
       "description": "Uno Card Game Family Night",
-      "category": 3,
+      "category": 1,
       "img_url": "https://m.media-amazon.com/images/I/813J6ld2EJL.__AC_SX300_SY300_QL70_FMwebp_.jpg",
       "price": 55.00,
       "in_stock_quantity": 10,
