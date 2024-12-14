@@ -4,16 +4,18 @@ let counter = 0;
 // Load posts 10 at a time
 const quantity = 9;
 
+// Flags
 let endOfData = false;
-
 let loadOrdersFlag = true;
 
+// Constants
 const ORDER_TAB = "order";
 const PRODUCT_TAB = "product";
 
 
 document.addEventListener("DOMContentLoaded", loadOrders);
 
+// The page will load more items as the user scrolls the items already loaded
 window.onscroll = () => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
         if (loadOrdersFlag)
@@ -24,14 +26,23 @@ window.onscroll = () => {
 };
 
 function resetLoadParameters() {
+    /**
+     * Method to reset the load parameters.
+     * This is call when a vendor switches between
+     * orders tab and products tab
+     */
     counter = 0;
     endOfData = false;
 }
 
 function changeActiveTab(tab) {
+    /**
+     * Method to switch between the orders and the products tabs
+     */
     const productTab = document.getElementById("showYourProducts");
     const orderTab = document.getElementById("showYourOrders");
 
+    // Set the active tab
     if (tab == ORDER_TAB) {
         orderTab.className = "nav-link active";
 
@@ -52,21 +63,32 @@ function changeActiveTab(tab) {
 //////////////////////////////////////////////
 
 function showYourProducts() {
+    /**
+     * Method used to load the "Your Products" tab.
+     */
+
+    // Display the products container
     const productsContainer = document.getElementById("profile-products");
     productsContainer.style.display = "flex";
 
+    // Hide the orders container
     const ordersContainer = document.getElementById("profile-orders-container");
     ordersContainer.style.display = "none";
 
+    // Reset the parameters, set the tab active
     resetLoadParameters();
     changeActiveTab(PRODUCT_TAB);
     loadOrdersFlag = false;
 
+    // Reset the product container and load the products
     resetProductSpace();
     loadProducts();
 }
 
 function changeProductFormToPost() {
+    /**
+     * Method to setup the form for the creation of a new product
+     */
     let product_form = document.querySelector('#product-form');
     product_form.action = "/product";
     const popupLabel = document.getElementById('exampleModalLabel');
@@ -74,6 +96,9 @@ function changeProductFormToPost() {
 }
 
 function changeProductFormToPut(product_id) {
+    /**
+     * Method to setup the form for the update of an existing product
+     */
     let product_form = document.querySelector('#product-form');
     product_form.action = "/product/" + product_id;
     const popupLabel = document.getElementById('exampleModalLabel');
@@ -81,12 +106,21 @@ function changeProductFormToPut(product_id) {
 }
 
 function closeForm() {
+    /**
+     * Method to close the product modal popup.
+     * This will reset the product form.
+     */
     const product_form = document.querySelector('#product-form');
     document.getElementById('id_description').innerHTML = '';
     product_form.reset();
 }
 
 function onProductClick(product_id) {
+    /**
+     * Method to load the product data on product click.
+     */
+
+    // Set the product form to update
     changeProductFormToPut(product_id);
 
     const url = "/product/" + product_id;
@@ -97,7 +131,7 @@ function onProductClick(product_id) {
         .then(response => response.json())
         .then(response => response.form)
         .then(data => {
-            // setUpProductForm(data);
+            // Update the DOM with the product's information
             document.getElementById('id_name').value = data.name;
             document.getElementById('id_description').innerHTML = data.description;
             document.getElementById('id_category').value = data.category.id;
@@ -109,6 +143,10 @@ function onProductClick(product_id) {
 }
 
 function loadProducts() {
+    /**
+     * Method to load the products by calling the API
+     */
+
     // Checking if we reached the end of products
     if (endOfData)
         return;
@@ -122,6 +160,7 @@ function loadProducts() {
     fetch(`/load-vendor-products?start=${start}&end=${end}`)
     .then(response => response.json())
     .then(data => {
+        // Add the products to the DOM if any
         if (data.products.length > 0)
             data.products.forEach(add_products);
         else {
@@ -134,13 +173,19 @@ function loadProducts() {
 }
 
 function resetProductSpace() {
+    /**
+     * Method to reset the product container
+     * this is call before be add the products to the DOM
+     */
     const allDisplayingProducts = document.getElementsByClassName("col-md-4 product-space");
     const arrayOfProducts = Array.from(allDisplayingProducts);
     arrayOfProducts.forEach(product => product.remove());
 }
 
-// Add a new product with given contents to DOM
 function add_products(content) {
+    /**
+     * Add a new product with given contents to DOM
+     */
 
     // Create new product
     // boostrap div
@@ -173,6 +218,9 @@ function add_products(content) {
 }
 
 function add_no_product_tag() {
+    /**
+     * Method to add a tag indicating there are no products
+     */
     const hTag = document.createElement("h3");
     hTag.innerHTML = "There are no products";
     document.querySelector('#profile-products').append(hTag);
@@ -184,22 +232,34 @@ function add_no_product_tag() {
 //////////////////////////////////////////////
 
 function showYourOrders() {
+     /**
+     * Method used to load the "Your Orders" tab.
+     */
+
+     // Hide the products container
     const productsContainer = document.getElementById("profile-products");
     if (productsContainer != null)
         productsContainer.style.display = "none";
 
+    // Display the orders container
     const ordersContainer = document.getElementById("profile-orders-container");
     ordersContainer.style.display = "flex";
 
+    // Reset the parameters, set the tab active
     changeActiveTab(ORDER_TAB);
     resetLoadParameters();
     loadOrdersFlag = true;
 
+    // Reset the order container and load the orders
     resetOrderSpace();
     loadOrders();
 }
 
 function loadOrders() {
+    /**
+     * Method to load the orders by calling the API
+     */
+
     // Checking if we reached the end of products
     if (endOfData)
         return;
@@ -213,6 +273,7 @@ function loadOrders() {
     fetch(`/load-orders?start=${start}&end=${end}`)
     .then(response => response.json())
     .then(data => {
+        // Add the orders if there are any
         if (data.orders.length > 0)
             addOrdersToDom(data.orders);
         else {
@@ -225,15 +286,22 @@ function loadOrders() {
 }
 
 function resetOrderSpace() {
-    const accordion = document.getElementById("accordionExample");
-    if (accordion != null)
-        accordion.remove();
+    /**
+     * Method to reset order container
+     */
+    const container = document.getElementById("profile-orders-container");
+    if (container != null) {
+        const children = container.children;
+
+        Array.from(children).forEach(element  => element.remove());
+    }
 }
 
-// Add the order with given contents to DOM
 function addOrdersToDom(orders) {
+    /**
+     * Method to add the order with given contents to DOM
+     */
     const container = document.getElementById("profile-orders-container");
-
     if (container == null)
         return;
 
@@ -248,16 +316,20 @@ function addOrdersToDom(orders) {
         accordion.className = "accordion";
     }
 
+    // The first order should be active
     let firstItem = true;
     orders.forEach(order => {
+        // Create bootstrap accordion
         const accordionItem = document.createElement("div");
         accordionItem.className = "accordion-item";
 
+        // Create header
         const header = document.createElement("h2");
         header.className = "accordion-header";
         header.id = `heading${order.id}`;
         accordionItem.append(header);
 
+        // Create accordion button
         const button = document.createElement("button");
         button.className = "accordion-button order";
         if (!firstItem)
@@ -270,6 +342,7 @@ function addOrdersToDom(orders) {
         button.innerHTML = `Order ID: ${order.id} - Item count: ${order.total_items} - Ordered on ${new Date(order.order_date).toLocaleDateString("en-US", dateOptions)}`;
         header.append(button);
 
+        // Create accordion container
         const accordionContentContainer = document.createElement("div");
         accordionContentContainer.className = "accordion-collapse collapse";
         if (firstItem)
@@ -386,7 +459,11 @@ function addOrdersToDom(orders) {
 }
 
 function addNoProductTag() {
-    const container = document.getElementById("sub-header-profile");
+    /**
+     * Method to add a h tag indicating that there are no products
+     * @type {HTMLElement}
+     */
+    const container = document.getElementById("profile-orders-container");
     const noProductTag = document.createElement("h4");
     noProductTag.innerHTML = "You have not orders yet.";
     container.append(noProductTag);

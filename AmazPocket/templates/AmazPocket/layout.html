@@ -31,7 +31,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">AmazPocket</a>
+            <a class="navbar-brand" href="{% url 'index' %}">AmazPocket</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -55,8 +55,8 @@
                       </ul>
                     </li>
                 {% endif %}
-                <form class="form-inline my-2 my-lg-0">
-                  <input class="form-control mr-sm-2 m-l-1" type="search" placeholder="Search" aria-label="Search">
+                <form method="GET" action="{% url 'search' %}" class="form-inline my-2 my-lg-0">
+                  <input class="form-control mr-sm-2" type="search" name="criteria" placeholder="Search" aria-label="Search">
                   <button class="btn btn-outline-success my-2 my-sm-0 bold" type="submit">Search</button>
                 </form>
             </ul>

@@ -18,10 +18,10 @@ class ProductForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.visible_fields():
-            # For each field, the input element should
-            # have the class form-control and it should have
-            # a default placeholder
-            if field.name != 'is_active':
+            # Except for the field "is_active", for each field,
+            # the input element should have the class form-control,
+            # and it should have a default placeholder
+            if field.name != "is_active":
                 field.field.widget.attrs.update({
                     "class": "form-control",
                     "placeholder": f"Enter {field.label}"
@@ -29,6 +29,10 @@ class ProductForm(ModelForm):
 
 
 class OrderDetailForm(ModelForm):
+    """
+    Order Detail Form that takes its meta
+    from the Order Detail model
+    """
     class Meta:
         model = OrderDetails
         fields = ['name', 'address', 'city', 'state', 'zipcode',
@@ -38,7 +42,7 @@ class OrderDetailForm(ModelForm):
         super().__init__(*args, **kwargs)
         for field in self.visible_fields():
             # For each field, the input element should
-            # have the class form-control and it should have
+            # have the class form-control, and it should have
             # a default placeholder
             field.field.widget.attrs.update({
                 "class": "form-control",
