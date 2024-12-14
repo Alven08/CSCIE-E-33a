@@ -289,9 +289,12 @@ function resetOrderSpace() {
     /**
      * Method to reset order container
      */
-    const accordion = document.getElementById("accordionExample");
-    if (accordion != null)
-        accordion.remove();
+    const container = document.getElementById("profile-orders-container");
+    if (container != null) {
+        const children = container.children;
+
+        Array.from(children).forEach(element  => element.remove());
+    }
 }
 
 function addOrdersToDom(orders) {
@@ -299,8 +302,6 @@ function addOrdersToDom(orders) {
      * Method to add the order with given contents to DOM
      */
     const container = document.getElementById("profile-orders-container");
-
-    // If no container is found it means the logged-in user is not a vendor
     if (container == null)
         return;
 
@@ -462,7 +463,7 @@ function addNoProductTag() {
      * Method to add a h tag indicating that there are no products
      * @type {HTMLElement}
      */
-    const container = document.getElementById("sub-header-profile");
+    const container = document.getElementById("profile-orders-container");
     const noProductTag = document.createElement("h4");
     noProductTag.innerHTML = "You have not orders yet.";
     container.append(noProductTag);

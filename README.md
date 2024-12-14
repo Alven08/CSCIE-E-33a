@@ -6,7 +6,7 @@ The application allows users to register, log in, and log out. With an account, 
 ### Products, Cart and Wishlists
 The user can interact with products without loading a different page. The user can click on any product and a popup with the product's information and possible actions. The same approach was implemented for the cart, as the user can see the cart without loading a different page. By clicking on the cart link in the navigation bar, the application displays a side panel with the cart, showing the products in the cart. In the cart, the user can change the quantity of the product or even delete it from the cart. Finally, the user can click on the checkout button to be redirected to the checkout screen.
 
-An interesting feature of the web application is that only ten products are loaded on all pages. As the user scrolls down, more products, if any, are loaded and displayed.
+An interesting feature of the web application is that only nine products are loaded on all pages. As the user scrolls down, more products, if any, are loaded and displayed. This decision was made to decrease the load times by reducing the number of products loaded simultaneously. If the user wants to see more products scrolling down the page will load more. This is a better approach than loading all the possible products at once and waiting for the client to render them.
 
 
 ### Checkout
@@ -31,7 +31,7 @@ Wishlist products
 
 
 ### static/AmazPocket/profile.js
-The profile.js file will load the orders the user made. If the user is a vendor it will also load the vendor's products. It follows the ten items at a time approach, for the orders and the products. It organizes the two types of data in tabs. Your Orders tab and Your Products tab. If the user is not a vendor the Your Products tab will be hidden. When loading the orders, the file creates accordions that contain the order information. The first accordion will be open by default and the other accordions will be closed. Only one accordion at a time can be opened.
+The profile.js file will load the orders the user made. If the user is a vendor it will also load the vendor's products. It follows the nine items at a time approach, for the orders and the products. It organizes the two types of data in tabs. Your Orders tab and Your Products tab. If the user is not a vendor the Your Products tab will be hidden. When loading the orders, the file creates accordions that contain the order information. The first accordion will be open by default and the other accordions will be closed. Only one accordion at a time can be opened.
 
 
 ### static/AmazPocket/register.js
@@ -139,3 +139,7 @@ To run the application run:
 3. Load the fixtures: python manage.py loaddata AmazPocket/fixtures/initial_data.json
 4. python manage.py createsuperuser
 5. python manage.py runserver
+
+
+## Youtube Video
+https://youtu.be/yEdQEfnLXd0

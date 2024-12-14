@@ -76,8 +76,7 @@ def load_vendor_products(request):
     end = int(request.GET.get("end") or (start + 9))
 
     all_products = (Product.objects.filter(vendor=request.user,
-                                          is_active=True,
-                                          in_stock_quantity__gt=0)
+                                          is_active=True)
                     .order_by("-created_date").all())
     products = [single_product.serialize() for single_product in all_products[start:end]]
 
@@ -266,13 +265,8 @@ def product(request, product_id=None):
         else:
             product_form = ProductForm(request.POST)
             return JsonResponse({
-                "form": product_form
+                "error": "Information is not valid"
             }, status=400)
-    else:
-        product_form = ProductForm()
-        return JsonResponse({
-            "form": product_form
-        }, status=200)
 
 
 def delete_product(request, product_id):
@@ -493,9 +487,20 @@ def checkout(request):
             })
 
         else:
-            return JsonResponse({
-                "form": order_details_form
-            }, status=400)
+            current_cart, created = Cart.objects.get_or_create(user=request.user)
+            items = current_cart.items.all()
+            items_serialized = [item.serialize() for item in items]
+            subtotal = current_cart.get_subtotal()
+            item_count = current_cart.get_items_count()
+            total = round(subtotal + (subtotal * Decimal(tax)), 2)
+            return render(request, "AmazPocket/checkout.html", {
+                "cart": items_serialized,
+                "subtotal": subtotal,
+                "item_count": item_count,
+                "form": order_details_form,
+                "tax": tax,
+                "total": total
+            })
 
 
 def load_orders(request):
