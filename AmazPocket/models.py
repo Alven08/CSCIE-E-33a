@@ -88,7 +88,9 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=9, decimal_places=2)
     in_stock_quantity = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
-    vendor = models.ForeignKey(User, on_delete=models.CASCADE, related_name="products")
+    vendor = models.ForeignKey(User,
+                               on_delete=models.CASCADE,
+                               related_name="products")
     created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -114,7 +116,9 @@ class Order(models.Model):
     It keeps track of the order subtotal, tax rate and total.
     The created_date is set to the date and time it was created.
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             related_name="orders")
     subtotal = models.DecimalField(max_digits=9, decimal_places=2)
     tax = models.DecimalField(max_digits=9, decimal_places=2)
     total = models.DecimalField(max_digits=9, decimal_places=2)
@@ -193,7 +197,9 @@ class OrderItem(models.Model):
     The quantity for said product,
     and the price for the product at the time of checkout
     """
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="order_items")
+    order = models.ForeignKey(Order,
+                              on_delete=models.CASCADE,
+                              related_name="order_items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     price = models.DecimalField(max_digits=9, decimal_places=2)
@@ -215,12 +221,15 @@ class Cart(models.Model):
     It has a reference to the user and
     the total cost of all the products in the cart
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             related_name="cart")
     total = models.DecimalField(max_digits=9, decimal_places=2, default=0.00)
 
     def get_subtotal(self):
         # Return subtotal of all the items in the cart
-        subtotal = sum([item.product.price * item.quantity for item in self.items.all()])
+        subtotal = sum([item.product.price * item.quantity
+                        for item in self.items.all()])
         return subtotal
 
     def get_items_count(self):
@@ -264,7 +273,9 @@ class Wishlist(models.Model):
     a field name to identify the wishlist.
     """
     name = models.CharField(max_length=100)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="storages")
+    user = models.ForeignKey(User,
+                             on_delete=models.CASCADE,
+                             related_name="storages")
 
     def __str__(self):
         return f"{self.name}"
@@ -283,8 +294,8 @@ class WishlistItem(models.Model):
     It contains a reference to the wishlist and the product model.
     """
     wishlist = models.ForeignKey(Wishlist,
-                             on_delete=models.CASCADE,
-                             related_name="items")
+                                 on_delete=models.CASCADE,
+                                 related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
 
     def serialize(self):

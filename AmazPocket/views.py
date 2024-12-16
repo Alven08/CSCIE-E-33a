@@ -6,7 +6,8 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
-from AmazPocket.models import User, Category, Product, Wishlist, WishlistItem, Cart, CartItem, Order, OrderItem
+from AmazPocket.models import (User, Category, Product, Wishlist,
+                               WishlistItem, Cart, CartItem, Order, OrderItem)
 from AmazPocket.forms import ProductForm, OrderDetailForm
 
 
@@ -45,19 +46,22 @@ def load_products(request):
         # from the wishlist in question
         wishlist = Wishlist.objects.get(pk=wish_id, user=request.user)
         wish_products = wishlist.items.all()
-        products = [product.product.serialize() for product in wish_products[start:end]]
+        products = [product.product.serialize() for
+                    product in wish_products[start:end]]
     elif search_criteria:
         # If the search criteria is not an empty string
         # return all the products that contain the search criteria
-        search_products = (Product.objects.filter(is_active=True,
-                                              in_stock_quantity__gt=0,
-                                              name__contains=search_criteria)
-                        .order_by("-created_date").all())
-        products = [product.serialize() for product in search_products[start:end]]
+        search_products = \
+            (Product.objects.filter(is_active=True,
+                                    in_stock_quantity__gt=0,
+                                    name__contains=search_criteria)
+             .order_by("-created_date").all())
+        products = [product.serialize() for
+                    product in search_products[start:end]]
     else:
         # Else, return all the existing products
         all_products = (Product.objects.filter(is_active=True,
-                                              in_stock_quantity__gt=0)
+                                               in_stock_quantity__gt=0)
                         .order_by("-created_date").all())
         products = [product.serialize() for product in all_products[start:end]]
 
@@ -76,9 +80,10 @@ def load_vendor_products(request):
     end = int(request.GET.get("end") or (start + 9))
 
     all_products = (Product.objects.filter(vendor=request.user,
-                                          is_active=True)
+                                           is_active=True)
                     .order_by("-created_date").all())
-    products = [single_product.serialize() for single_product in all_products[start:end]]
+    products = [single_product.serialize()
+                for single_product in all_products[start:end]]
 
     return JsonResponse({
         "products": products
@@ -138,9 +143,12 @@ def register(request):
 
         try:
 
-            user = User.objects.create_user(first_name=firstname, last_name=lastname,
-                                            email=email, username=email, password=password,
-                                            is_vendor=is_vendor, vendor_name=vendor_name)
+            user = User.objects.create_user(first_name=firstname,
+                                            last_name=lastname,
+                                            email=email, username=email,
+                                            password=password,
+                                            is_vendor=is_vendor,
+                                            vendor_name=vendor_name)
         except IntegrityError:
             return render(request, "AmazPocket/register.html",
                           {"message": "Username already taken."})
@@ -210,7 +218,8 @@ def product(request, product_id=None):
     For the "POST" request:
     If a product id is provided, update the product
     as long as the vendor is the owner.
-    If the product id is not provided create a new product for the logged-in user.
+    If the product id is not provided
+    create a new product for the logged-in user.
     """
     if request.method == "GET":
         product_item = Product.objects.get(pk=product_id)
@@ -219,8 +228,11 @@ def product(request, product_id=None):
         is_in_cart = False
         if request.user.is_authenticated:
             # Get the wishlists and the carrt
-            current_user_lists = Wishlist.objects.filter(user=request.user).all()
-            current_user_cart, __ = Cart.objects.get_or_create(user=request.user)
+            current_user_lists = (
+                Wishlist.objects.filter(user=request.user)
+                .all())
+            current_user_cart, __ = (Cart.objects.
+                                     get_or_create(user=request.user))
 
             # iterate over the wishlist and check if the product exists there
             for list in current_user_lists:
@@ -230,7 +242,8 @@ def product(request, product_id=None):
                 lists.append(list_ready)
 
             # Check if the product is in the cart
-            is_in_cart = current_user_cart.items.filter(product=product_item).exists()
+            is_in_cart = (current_user_cart.items
+                          .filter(product=product_item).exists())
 
         return JsonResponse({
             "form": product_item.serialize(),
@@ -241,8 +254,11 @@ def product(request, product_id=None):
     elif request.method == "POST":
         # Create a new product for the logged in vendor
         if product_id is not None:
-            current_product = get_object_or_404(Product, pk=product_id, vendor=request.user)
-            product_form = ProductForm(request.POST, instance=current_product)
+            current_product = get_object_or_404(Product,
+                                                pk=product_id,
+                                                vendor=request.user)
+            product_form = ProductForm(request.POST,
+                                       instance=current_product)
         else:
             product_form = ProductForm(request.POST)
 
@@ -276,7 +292,9 @@ def delete_product(request, product_id):
     """
     if request.method == "POST":
         try:
-            to_be_deleted = get_object_or_404(Product, id=product_id, vendor=request.user)
+            to_be_deleted = get_object_or_404(Product,
+                                              id=product_id,
+                                              vendor=request.user)
             to_be_deleted.delete()
             return HttpResponseRedirect(reverse("profile"))
         except Product.DoesNotExist:
@@ -324,9 +342,12 @@ def delete_wishlist(request, wishlist_id):
     """
     if request.method == "POST":
         try:
-            to_be_deleted = get_object_or_404(Wishlist, id=wishlist_id, user=request.user)
+            to_be_deleted = get_object_or_404(Wishlist,
+                                              id=wishlist_id,
+                                              user=request.user)
             to_be_deleted.delete()
-            return JsonResponse({ "success": True }, status=200)
+            return JsonResponse({"success": True},
+                                status=200)
         except Product.DoesNotExist:
             return JsonResponse({
                 "error": "Wishlist does not exist."
@@ -348,7 +369,7 @@ def add_to_wishlist(request, wishlist_id, product_id):
         item, created = (WishlistItem.objects
                          .get_or_create(wishlist=wishlist, product=product))
 
-        return JsonResponse({ "success": True }, status=200)
+        return JsonResponse({"success": True}, status=200)
 
 
 def remove_from_wishlist(request, wishlist_id, product_id):
@@ -356,10 +377,11 @@ def remove_from_wishlist(request, wishlist_id, product_id):
     View to remove the product from the wishlist.
     """
     if request.method == "POST":
-        item = WishlistItem.objects.get(wishlist_id=wishlist_id, product_id=product_id)
+        item = WishlistItem.objects.get(wishlist_id=wishlist_id,
+                                        product_id=product_id)
         item.delete()
 
-        return JsonResponse({ "success": True }, status=200)
+        return JsonResponse({"success": True}, status=200)
 
 
 def cart(request):
@@ -391,9 +413,11 @@ def add_to_cart(request, product_id):
 
         # Add it to the cart by creating a new cart item object
         item, created = (CartItem.objects
-                         .get_or_create(cart=current_cart, product=product, quantity=1))
+                         .get_or_create(cart=current_cart,
+                                        product=product,
+                                        quantity=1))
 
-        return JsonResponse({ "success": True }, status=200)
+        return JsonResponse({"success": True}, status=200)
 
 
 def remove_from_cart(request, item_id):
@@ -405,7 +429,7 @@ def remove_from_cart(request, item_id):
         current_item = CartItem.objects.get(pk=item_id, cart=current_cart)
         current_item.delete()
 
-        return JsonResponse({ "success": True }, status=200)
+        return JsonResponse({"success": True}, status=200)
 
 
 def update_item_quantity(request, item_id, quantity):
@@ -415,14 +439,16 @@ def update_item_quantity(request, item_id, quantity):
     """
     if request.method == "POST":
         current_cart = Cart.objects.get(user=request.user)
-        current_item = get_object_or_404(CartItem, pk=item_id, cart=current_cart)
+        current_item = get_object_or_404(CartItem,
+                                         pk=item_id,
+                                         cart=current_cart)
         if (quantity == 0):
             current_item.delete()
         else:
             current_item.quantity = quantity
             current_item.save()
 
-        return JsonResponse({ "success": True }, status=200)
+        return JsonResponse({"success": True}, status=200)
 
 
 def checkout(request):
@@ -460,11 +486,13 @@ def checkout(request):
         if order_details_form.is_valid():
             current_cart = get_object_or_404(Cart, user=request.user)
             items = current_cart.items.all()
-            total = current_cart.get_subtotal() + (current_cart.get_subtotal() * Decimal(tax))
+            total = (current_cart.get_subtotal() +
+                     (current_cart.get_subtotal() * Decimal(tax)))
 
             # Create order
             current_order = Order.objects.create(user=request.user,
-                                                 subtotal=current_cart.get_subtotal(),
+                                                 subtotal=current_cart.
+                                                 get_subtotal(),
                                                  tax=tax,
                                                  total=total)
 
@@ -475,10 +503,11 @@ def checkout(request):
 
             # Create order items
             for item in items:
-                new_order_item = OrderItem.objects.create(order=current_order,
-                                                          product=item.product,
-                                                          quantity=item.quantity,
-                                                          price=item.product.price)
+                new_order_item = (OrderItem.objects
+                                  .create(order=current_order,
+                                          product=item.product,
+                                          quantity=item.quantity,
+                                          price=item.product.price))
 
             # Delete cart after it has been processed
             current_cart.delete()
@@ -487,7 +516,8 @@ def checkout(request):
             })
 
         else:
-            current_cart, created = Cart.objects.get_or_create(user=request.user)
+            current_cart, created = (Cart.objects
+                                     .get_or_create(user=request.user))
             items = current_cart.items.all()
             items_serialized = [item.serialize() for item in items]
             subtotal = current_cart.get_subtotal()
@@ -513,7 +543,9 @@ def load_orders(request):
         start = int(request.GET.get("start") or 0)
         end = int(request.GET.get("end") or (start + 9))
 
-        all_orders = Order.objects.filter(user=request.user).order_by("-created_date").all()
+        all_orders = (Order.objects
+                      .filter(user=request.user)
+                      .order_by("-created_date").all())
         orders = [order.serialize() for order in all_orders[start:end]]
 
         return JsonResponse({
